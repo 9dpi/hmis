@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi" x-data="{ tab: 'home', darkMode: false }" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP Housekeeping - Clean & Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { scp: { bg: '#030712', card: '#111827', primary: '#10b981' } } } }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .phone-case {
+            width: 375px;
+            height: 812px;
+            border: 12px solid #1e293b;
+            border-radius: 55px;
+            position: relative;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4);
+            background: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 28px;
+            background: #1e293b;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+            z-index: 100;
+        }
+
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            z-index: 50;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .active-tab {
+            color: #10b981 !important;
+        }
+
+        .hk-pulse {
+            animation: pulse-mint 2s infinite;
+        }
+
+        @keyframes pulse-mint {
+            0% {
+                box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(16, 185, 129, 0);
+            }
+        }
+    </style>
+</head>
+
+<body :class="darkMode ? 'dark bg-slate-900' : 'bg-slate-200'">
+
+    <div class="phone-case" :class="darkMode ? 'border-slate-800' : 'border-slate-900'">
+        <div class="notch"></div>
+
+        <div class="app-container transition-colors duration-300" :class="darkMode ? 'bg-[#030712]' : 'bg-slate-50'">
+
+            <header class="p-6 pt-10 flex justify-between items-center z-40"
+                :class="darkMode ? 'bg-[#030712]/90' : 'bg-white shadow-sm'">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-broom text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-[9px] opacity-50 font-bold uppercase tracking-widest"
+                            :class="darkMode ? 'text-white' : 'text-slate-900'">NHÂN VIÊN BUỒNG PHÒNG</h2>
+                        <h1 class="text-sm font-black tracking-tight"
+                            :class="darkMode ? 'text-white' : 'text-slate-900'">NV. TRẦN THỊ H</h1>
+                    </div>
+                </div>
+                <button onclick="alert('Đã gửi thông báo hoàn tất khu vực!')"
+                    class="w-10 h-10 rounded-full flex items-center justify-center bg-emerald-500 text-white shadow-lg hk-pulse transition-transform active:scale-90">
+                    <i class="fas fa-check text-xs"></i>
+                </button>
+            </header>
+
+            <div class="app-content p-5 space-y-6">
+
+                <div x-show="tab === 'home'" x-transition x-cloak class="space-y-6">
+                    <div class="p-5 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-[9px] opacity-70 font-bold uppercase mb-1">Tiến độ hôm nay</p>
+                                <h3 class="text-2xl font-black italic">12/20 Phòng</h3>
+                            </div>
+                            <i class="fas fa-spray-can text-3xl opacity-20"></i>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                            <div>
+                                <p class="text-[8px] opacity-70 uppercase font-bold">Phòng đang dọn</p>
+                                <p class="text-sm font-bold">P. 402</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] opacity-70 uppercase font-bold">Thời gian TB</p>
+                                <p class="text-sm font-bold">25 Phút/P</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-2 text-center">
+                        <div @click="tab = 'tasks'" class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Lịch dọn</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-soap"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Vật tư</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Báo hỏng</span>
+                        </div>
+                        <div @click="tab = 'history'" class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Lịch sử</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3
+                            class="text-[10px] font-black uppercase mb-4 opacity-50 tracking-widest text-slate-900 dark:text-white">
+                            Danh sách phòng chờ</h3>
+                        <div class="space-y-3">
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-red-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Phòng 501 - BN ra viện</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-red-100 text-red-600 font-bold uppercase">Ưu
+                                        tiên</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Yêu cầu: Khử khuẩn toàn bộ</p>
+                                    <p class="text-[9px] font-bold text-red-600">Khẩn cấp</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Phòng 405 - Dọn định kỳ</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold uppercase">Chờ
+                                        dọn</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Thay ga giường, bổ sung nước</p>
+                                    <p class="text-[9px] font-bold text-emerald-600">Đúng lịch</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-blue-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Sảnh chờ tầng 3</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-blue-100 text-blue-600 font-bold uppercase">Đang
+                                        dọn</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Vệ sinh sàn và kính</p>
+                                    <p class="text-[9px] font-bold text-blue-600">Tiến độ 50%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'tasks'" x-transition x-cloak class="space-y-6">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Phân công ca trực
+                    </h3>
+                    <div class="p-10 border-2 border-dashed rounded-3xl text-center opacity-40"
+                        :class="darkMode ? 'border-slate-800 text-white' : 'border-slate-200'">
+                        <i class="fas fa-calendar-day text-4xl mb-3 text-emerald-500"></i>
+                        <p class="text-xs">Xem chi tiết lịch trực và khu vực phụ trách</p>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'history'" x-transition x-cloak class="space-y-4">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Báo cáo hóa chất</h3>
+                    <div
+                        class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 border-l-4 border-l-orange-500">
+                        <p class="text-[10px] font-bold text-orange-600 uppercase">Cảnh báo vật tư</p>
+                        <p class="text-xs mt-1 font-semibold">Nước lau sàn (Cần bổ sung tại kho tầng 4)</p>
+                        <button
+                            class="w-full mt-4 py-3 bg-emerald-500 text-white rounded-xl font-black uppercase text-[10px]">Đăng
+                            ký nhận vật tư</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav class="bottom-nav flex justify-around items-center border-t px-4 transition-colors duration-300"
+                :class="darkMode ? 'bg-[#0b1221] border-slate-800' : 'bg-white border-slate-100'">
+
+                <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'home' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-th-list text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Nhiệm vụ</span>
+                </button>
+
+                <button @click="tab = 'tasks'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'tasks' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-clipboard-list text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Lịch trực</span>
+                </button>
+
+                <div class="relative -top-6">
+                    <button onclick="alert('Đang mở Camera để quét QR Code phòng...')"
+                        class="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-xl border-4 transition-transform active:scale-90"
+                        :class="darkMode ? 'border-[#030712]' : 'border-slate-50'">
+                        <i class="fas fa-qrcode text-xl"></i>
+                    </button>
+                </div>
+
+                <button @click="tab = 'history'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'history' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-file-signature text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Báo cáo</span>
+                </button>
+
+                <button class="flex flex-col items-center gap-1 text-slate-400">
+                    <i class="fas fa-user-circle text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Cá nhân</span>
+                </button>
+            </nav>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -21,7 +21,6 @@
                         scp: {
                             bg: '#0f172a',
                             card: '#1e293b',
-                            // Màu chủ đạo Y tế: Teal/Cyan
                             primary: '#0d9488',
                             accent: '#22d3ee'
                         }
@@ -56,7 +55,6 @@
             transition: 0.3s;
         }
 
-        /* Chỉnh tone màu Sidebar y tế */
         .dark .sidebar {
             background: #020617 !important;
             border-color: #1e293b;
@@ -106,7 +104,6 @@
             background: rgba(13, 148, 136, 0.05);
         }
 
-        /* Active state màu Teal */
         .nav-link.active {
             border-left-color: #0d9488;
             background: linear-gradient(90deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0) 100%);
@@ -170,7 +167,6 @@
             transition: 0.3s;
         }
 
-        /* Card style sạch sẽ */
         .dark .stat-card {
             background-color: #0f172a !important;
             border-color: #1e293b;
@@ -245,14 +241,16 @@
             <nav class="flex-grow py-4 overflow-y-auto">
                 <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống quản trị
                 </div>
+
                 <div @click="section = 'overview'" :class="section === 'overview' ? 'active' : ''"
                     class="nav-link flex items-center px-6 py-4">
-                    <i class="fas fa-chart-line mr-3 w-5 text-lg"></i> Tổng quan lâm sàng
+                    <i class="fas fa-chart-line mr-3 w-5 text-lg"></i> Quản lý bệnh viện
                 </div>
-                <div @click="section = 'roadmap'" :class="section === 'roadmap' ? 'active' : ''"
-                    class="nav-link flex items-center px-6 py-4">
-                    <i class="fas fa-notes-medical mr-3 w-5 text-lg"></i> Lộ trình chuyển đổi số
-                </div>
+
+                <a href="show-app.html" target="_blank" class="nav-link flex items-center px-6 py-4 no-underline">
+                    <i class="fas fa-notes-medical mr-3 w-5 text-lg"></i> Ứng dụng Mobile App
+                </a>
+
                 <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Khu vực
                     chuyên môn</div>
                 <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-user-injured mr-3 w-5"></i> Danh sách
@@ -261,6 +259,7 @@
                     giường bệnh</div>
                 <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-microscope mr-3 w-5"></i> Xét nghiệm
                     & CĐHA</div>
+
                 <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vận hành &
                     Hậu cần</div>
                 <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-pills mr-3 w-5"></i> Quản lý kho dược
@@ -289,8 +288,7 @@
                     <h2 class="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Cơ sở: Bệnh viện Quốc tế
                         SCP</h2>
                     <h3 class="text-2xl font-black uppercase tracking-tight transition-colors"
-                        :class="darkMode ? 'text-white' : 'text-slate-800'"
-                        x-text="section === 'overview' ? 'TRUNG TÂM ĐIỀU HÀNH HMIS' : 'LỘ TRÌNH TRIỂN KHAI'"></h3>
+                        :class="darkMode ? 'text-white' : 'text-slate-800'">TRUNG TÂM ĐIỀU HÀNH HMIS</h3>
                 </div>
                 <div class="text-right">
                     <p class="text-[9px] opacity-50 uppercase font-bold transition-colors"
@@ -318,23 +316,23 @@
                             <div class="text-xl font-black text-indigo-500" x-text="aqi"></div>
                             <div class="h-[45px] mt-2"><canvas id="chartAQI"></canvas></div>
                         </div>
-                        <div class="stat-card"><span class="text-[9px] font-bold text-slate-500 uppercase block">Bệnh
-                                nhân</span>
+                        <div class="stat-card">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Bệnh nhân</span>
                             <div class="text-xl font-black" :class="darkMode ? 'text-white' : 'text-teal-900'">1,240
                             </div>
                             <div class="mt-4 text-[8px] text-teal-600 font-bold uppercase"><i
                                     class="fas fa-caret-up"></i> 2.5% Mới</div>
                         </div>
-                        <div class="stat-card"><span class="text-[9px] font-bold text-slate-500 uppercase block">Giường
-                                trống</span>
+                        <div class="stat-card">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Giường trống</span>
                             <div class="text-xl font-black" :class="darkMode ? 'text-white' : 'text-slate-800'">42/500
                             </div>
                             <div class="mt-4 h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                 <div class="bg-teal-500 h-full w-[91%]"></div>
                             </div>
                         </div>
-                        <div class="stat-card border-orange-500/20"><span
-                                class="text-[9px] font-bold text-slate-500 uppercase block">Viện phí/Ngày</span>
+                        <div class="stat-card border-orange-500/20">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">Viện phí/Ngày</span>
                             <div class="text-xl font-black text-orange-600">845 Tr</div>
                             <div class="h-[45px] mt-2"><canvas id="chartFee"></canvas></div>
                         </div>
@@ -344,7 +342,8 @@
                         <div class="stat-card flex flex-col">
                             <h4 class="text-[10px] font-bold uppercase mb-4 text-teal-600 flex justify-between">
                                 <span>Giám sát khu Cấp cứu</span><span
-                                    class="text-red-500 animate-pulse font-black">LIVE</span></h4>
+                                    class="text-red-500 animate-pulse font-black">LIVE</span>
+                            </h4>
                             <div class="cam-container border border-teal-100 dark:border-slate-700 relative mb-4">
                                 <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=600"
                                     class="w-full h-full object-cover opacity-80 dark:opacity-60">
@@ -357,7 +356,7 @@
                                 hệ thống Camera</button>
                         </div>
 
-                        <div class="stat-card flex flex-col" x-data="{ t1: 5, t2: 3, t5: 2, t6: 1 }">
+                        <div class="stat-card flex flex-col">
                             <h4 class="text-[10px] font-bold uppercase mb-4 text-teal-600">Trạng thái Xe cấp cứu</h4>
                             <div class="grid grid-cols-2 gap-2 text-[9px] font-black mb-4 transition-colors"
                                 :class="darkMode ? 'text-white' : 'text-slate-700'">
@@ -445,14 +444,12 @@
                             Yêu cầu hỗ trợ khẩn cấp (Nurse Call)</div>
                         <table class="w-full text-left text-[11px]" :class="darkMode ? 'text-white' : 'text-slate-700'">
                             <tbody class="divide-y dark:divide-slate-800/50 divide-teal-50">
-                                <tr @click="showModal = true; selectedIssue = {room: 'Giường 12-A', desc: 'Bệnh nhân đau tức ngực, cần hỗ trợ gấp', status: 'Đang xử lý', date: 'Vừa xong'}"
-                                    class="cursor-pointer hover:bg-red-500/5">
+                                <tr class="cursor-pointer hover:bg-red-500/5">
                                     <td class="p-4 font-bold text-red-600">Giường 12-A</td>
                                     <td class="p-4 opacity-80 italic">Bệnh nhân đau tức ngực, cần hỗ trợ gấp</td>
                                     <td class="p-4 text-right text-red-600 font-bold uppercase text-[9px]">Khẩn cấp</td>
                                 </tr>
-                                <tr @click="showModal = true; selectedIssue = {room: 'P-405', desc: 'Yêu cầu thay băng, rửa vết thương', status: 'Đã tiếp nhận', date: '10 phút trước'}"
-                                    class="cursor-pointer hover:bg-teal-500/5">
+                                <tr class="cursor-pointer hover:bg-teal-500/5">
                                     <td class="p-4 font-bold text-teal-600">P-405</td>
                                     <td class="p-4 opacity-80 italic">Yêu cầu thay băng, rửa vết thương</td>
                                     <td class="p-4 text-right"><span
@@ -503,6 +500,10 @@
         window.updateCharts = () => {
             setTimeout(() => {
                 const c = getColors();
+                if (charts.temp) charts.temp.update();
+                if (charts.humid) charts.humid.update();
+                if (charts.aqi) charts.aqi.update();
+                if (charts.fee) charts.fee.update();
                 if (charts.elevator) { charts.elevator.options.scales.x.ticks.color = c.text; charts.elevator.update(); }
                 if (charts.traffic) { charts.traffic.options.scales.x.grid.color = c.grid; charts.traffic.options.scales.x.ticks.color = c.text; charts.traffic.update(); }
             }, 100);
