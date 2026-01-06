@@ -1,0 +1,164 @@
+/* ============================================
+   SCP HMIS - Components Stylesheet
+   Reusable UI Components
+   ============================================ */
+
+/* === SIDEBAR COMPONENT === */
+.sidebar {
+    width: 18rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    border-right-width: 1px;
+    transition: 0.3s;
+}
+
+.dark .sidebar {
+    background: #020617 !important;
+    border-color: #1e293b;
+}
+
+.light .sidebar {
+    background: #f0f9f9 !important;
+    border-color: #ccebeb;
+}
+
+/* === LOGO FRAME === */
+.logo-frame {
+    height: 90px;
+    min-height: 90px;
+    max-height: 90px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+@media (max-width: 1024px) {
+    .logo-frame {
+        height: 80px;
+        min-height: 80px;
+    }
+}
+
+.dark .logo-frame {
+    border-color: #1e293b;
+    background-color: #020617 !important;
+}
+
+.light .logo-frame {
+    border-color: #e2eef1;
+    /* Exact match with main-header */
+    background-color: #f0f9f9 !important;
+}
+
+/* === NAVIGATION LINKS === */
+.nav-link {
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+    font-size: 13px;
+    cursor: pointer;
+    margin: 2px 0;
+    text-decoration: none !important;
+}
+
+.dark .nav-link {
+    color: #94a3b8;
+}
+
+.light .nav-link {
+    color: #134e4a;
+}
+
+.nav-link i {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: transparent;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    background: rgba(13, 148, 136, 0.05);
+}
+
+.nav-link:hover i {
+    background: rgba(13, 148, 136, 0.1);
+    color: #0d9488;
+}
+
+.nav-link.active {
+    border-left-color: #0d9488;
+    background: linear-gradient(90deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.02) 100%);
+    font-weight: 700;
+}
+
+.nav-link.active i {
+    background: #0d9488;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.3);
+}
+
+.dark .nav-link.active {
+    color: #f8fafc !important;
+}
+
+.light .nav-link.active {
+    color: #0f766e !important;
+}
+
+/* === STAT CARDS === */
+.stat-card {
+    border-width: 1px;
+    border-radius: 20px;
+    padding: 1rem;
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .stat-card {
+        padding: 1.5rem;
+    }
+}
+
+.dark .stat-card {
+    background-color: #0f172a !important;
+    border-color: #1e293b;
+}
+
+.light .stat-card {
+    background-color: #ffffff !important;
+    border-color: #d1e5e5;
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* === CAMERA CONTAINER === */
+.cam-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+}
+
+/* === STATUS DOT === */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #0d9488;
+    animation: pulse 2s infinite;
+}

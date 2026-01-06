@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="vi" x-data="{ tab: 'home', darkMode: false }" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP Kitchen - Catering Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { scp: { bg: '#030712', card: '#111827', primary: '#f97316' } } } }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+
+
+
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 90px;
+            z-index: 50;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .active-tab {
+            color: #f97316 !important;
+        }
+
+        .kitchen-pulse {
+            animation: pulse-orange 2s infinite;
+        }
+
+        @keyframes pulse-orange {
+            0% {
+                box-shadow: 0 0 0 0px rgba(249, 115, 22, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(249, 115, 22, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(249, 115, 22, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100" oncontextmenu="return false;">
+
+
+    <div class="app-container relative shadow-2xl overflow-hidden transition-colors duration-300"
+        :class="darkMode ? 'bg-[#030712]' : 'bg-slate-50'">
+
+        <header class="p-6 pt-10 flex justify-between items-center z-40"
+            :class="darkMode ? 'bg-[#030712]/90' : 'bg-white shadow-sm'">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-orange-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-utensils text-sm"></i>
+                </div>
+                <div>
+                    <h2 class="text-[9px] opacity-50 font-bold uppercase tracking-widest"
+                        :class="darkMode ? 'text-white' : 'text-slate-900'">QUẢN LÝ BẾP ĂN</h2>
+                    <h1 class="text-sm font-black tracking-tight" :class="darkMode ? 'text-white' : 'text-slate-900'">
+                        QL. LÊ VĂN D</h1>
+                </div>
+            </div>
+            <button onclick="alert('Báo cáo kiểm thực bước 1 đã được gửi!')"
+                class="w-10 h-10 rounded-full flex items-center justify-center bg-orange-600 text-white shadow-lg kitchen-pulse transition-transform active:scale-90">
+                <i class="fas fa-clipboard-check text-xs"></i>
+            </button>
+        </header>
+
+        <div class="app-content p-5 space-y-6">
+
+            <div x-show="tab === 'home'" x-transition x-cloak class="space-y-6">
+                <div class="p-5 rounded-3xl bg-gradient-to-br from-orange-500 to-orange-800 text-white shadow-xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-[9px] opacity-70 font-bold uppercase mb-1">Dự kiến suất ăn</p>
+                            <h3 class="text-2xl font-black italic">1,250 Suất</h3>
+                        </div>
+                        <i class="fas fa-drumstick-bite text-3xl opacity-20"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                        <div>
+                            <p class="text-[8px] opacity-70 uppercase font-bold">Bệnh nhân</p>
+                            <p class="text-sm font-bold">850 suất</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] opacity-70 uppercase font-bold">Nhân viên</p>
+                            <p class="text-sm font-bold">400 suất</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div @click="tab = 'market'" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-900/20 text-orange-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-shopping-basket"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Đi chợ</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Thực đơn</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Dinh dưỡng</span>
+                    </div>
+                    <div @click="tab = 'inventory'" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Kho khô</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3
+                        class="text-[10px] font-black uppercase mb-4 opacity-50 tracking-widest text-slate-900 dark:text-white">
+                        Chờ phê duyệt</h3>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-orange-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">Nhập thực phẩm tươi sáng nay</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-orange-100 text-orange-600 font-bold uppercase">Chờ
+                                    nhận</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">NCC: HTX Nông nghiệp sạch</p>
+                                <p class="text-[9px] font-bold text-orange-600">12 mặt hàng</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-blue-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">Thực đơn ăn bệnh lý tuần 24</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-blue-100 text-blue-600 font-bold uppercase">Chờ
+                                    duyệt</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">Người lập: BS. Dinh dưỡng</p>
+                                <p class="text-[9px] font-bold text-blue-600">Đang soát xét</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">Hoàn trả dụng cụ khay ăn</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold uppercase">Xong</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">Từ: Khoa Nội tổng hợp</p>
+                                <p class="text-[9px] font-bold text-emerald-600">Đã đủ 150 bộ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="tab === 'market'" x-transition x-cloak class="space-y-6">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Nhập thực phẩm</h3>
+                <div class="p-10 border-2 border-dashed rounded-3xl text-center opacity-40"
+                    :class="darkMode ? 'border-slate-800 text-white' : 'border-slate-200'">
+                    <i class="fas fa-file-invoice text-4xl mb-3 text-orange-500"></i>
+                    <p class="text-xs">Chụp ảnh hóa đơn nhập hàng</p>
+                </div>
+            </div>
+
+            <div x-show="tab === 'inventory'" x-transition x-cloak class="space-y-4">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Tồn kho gia vị/gạo
+                </h3>
+                <div
+                    class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 border-l-4 border-l-red-500">
+                    <p class="text-[10px] font-bold text-red-600">CẢNH BÁO HẾT</p>
+                    <p class="text-xs mt-1 font-semibold">Gạo tám thơm (Còn 15kg)</p>
+                    <button
+                        class="w-full mt-4 py-3 bg-orange-600 text-white rounded-xl font-black uppercase text-[10px]">Tạo
+                        đề xuất mua hàng</button>
+                </div>
+            </div>
+
+        </div>
+
+        <nav class="bottom-nav flex justify-around items-center border-t px-4 transition-colors duration-300"
+            :class="darkMode ? 'bg-[#0b1221] border-slate-800' : 'bg-white border-slate-100'">
+
+            <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'home' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Trang chủ</span>
+            </button>
+
+            <button @click="tab = 'market'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'market' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-shopping-cart text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Nhập hàng</span>
+            </button>
+
+            <div class="relative -top-6">
+                <button onclick="alert('Mở menu tác vụ nhanh nhà bếp...')"
+                    class="w-14 h-14 bg-orange-600 rounded-full flex items-center justify-center text-white shadow-xl border-4 transition-transform active:scale-90"
+                    :class="darkMode ? 'border-[#030712]' : 'border-slate-50'">
+                    <i class="fas fa-th-large text-xl"></i>
+                </button>
+            </div>
+
+            <button @click="tab = 'inventory'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'inventory' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-archive text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Kho khô</span>
+            </button>
+
+            <button class="flex flex-col items-center gap-1 text-slate-400">
+                <i class="fas fa-user-circle text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Cá nhân</span>
+            </button>
+        </nav>
+
+    </div>
+
+
+</body>
+
+</html>

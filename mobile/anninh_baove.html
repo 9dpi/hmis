@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="vi" x-data="{ tab: 'home', darkMode: false }" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP Security - Safety & Protection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { scp: { bg: '#030712', card: '#111827', primary: '#0284c7' } } } }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        
+
+        
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 90px;
+            z-index: 50;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .active-tab {
+            color: #0284c7 !important;
+        }
+
+        .security-pulse {
+            animation: pulse-blue 2s infinite;
+        }
+
+        @keyframes pulse-blue {
+            0% {
+                box-shadow: 0 0 0 0px rgba(2, 132, 199, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(2, 132, 199, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(2, 132, 199, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100" oncontextmenu="return false;">
+
+    
+        <div class="app-container relative shadow-2xl overflow-hidden transition-colors duration-300" :class="darkMode ? 'bg-[#030712]' : 'bg-slate-50'">
+
+            <header class="p-6 pt-10 flex justify-between items-center z-40"
+                :class="darkMode ? 'bg-[#030712]/90' : 'bg-white shadow-sm'">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-sky-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-shield-halved text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-[9px] opacity-50 font-bold uppercase tracking-widest"
+                            :class="darkMode ? 'text-white' : 'text-slate-900'">ĐỘI AN NINH BỆNH VIỆN</h2>
+                        <h1 class="text-sm font-black tracking-tight"
+                            :class="darkMode ? 'text-white' : 'text-slate-900'">NV. ĐẶNG VĂN K</h1>
+                    </div>
+                </div>
+                <button onclick="alert('Đang phát tín hiệu báo động khẩn cấp tới toàn bộ đội an ninh!')"
+                    class="w-10 h-10 rounded-full flex items-center justify-center bg-sky-600 text-white shadow-lg security-pulse transition-transform active:scale-90">
+                    <i class="fas fa-radiation text-xs"></i>
+                </button>
+            </header>
+
+            <div class="app-content p-5 space-y-6">
+
+                <div x-show="tab === 'home'" x-transition x-cloak class="space-y-6">
+                    <div class="p-5 rounded-3xl bg-gradient-to-br from-sky-600 to-sky-800 text-white shadow-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-[9px] opacity-70 font-bold uppercase mb-1">Trạng thái khu vực</p>
+                                <h3 class="text-2xl font-black italic">AN TOÀN</h3>
+                            </div>
+                            <i class="fas fa-eye text-3xl opacity-20"></i>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                            <div>
+                                <p class="text-[8px] opacity-70 uppercase font-bold">Điểm tuần tra</p>
+                                <p class="text-sm font-bold">08/15 Cổng</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] opacity-70 uppercase font-bold">Cảnh báo AI</p>
+                                <p class="text-sm font-bold">00 Vụ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-2 text-center">
+                        <div @click="tab = 'patrol'" class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-900/20 text-sky-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-route"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Tuần tra</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Camera</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-id-card-alt"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Khách</span>
+                        </div>
+                        <div @click="tab = 'incident'" class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-file-signature"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Sự cố</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3
+                            class="text-[10px] font-black uppercase mb-4 opacity-50 tracking-widest text-slate-900 dark:text-white">
+                            Thông tin an ninh</h3>
+                        <div class="space-y-3">
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-red-600">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Cảnh báo: Đám đông cổng số 2</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-red-100 text-red-600 font-bold uppercase animate-pulse">Khẩn
+                                        cấp</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">AI Vision: Tụ tập trên 10 người</p>
+                                    <p class="text-[9px] font-bold text-red-600">Vừa xong</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-sky-600">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Kiểm tra xe cấp cứu cổng C</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-sky-100 text-sky-600 font-bold uppercase">Nhiệm
+                                        vụ</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Đảm bảo lối đi thông thoáng</p>
+                                    <p class="text-[9px] font-bold text-sky-600">Đang thực hiện</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Bàn giao ca trực sáng</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold uppercase">Hoàn
+                                        tất</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Tất cả cổng đã kiểm tra an toàn</p>
+                                    <p class="text-[9px] font-bold text-emerald-600">07:00 AM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'patrol'" x-transition x-cloak class="space-y-6">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Tuần tra số</h3>
+                    <div class="p-10 border-2 border-dashed rounded-3xl text-center opacity-40"
+                        :class="darkMode ? 'border-slate-800 text-white' : 'border-slate-200'">
+                        <i class="fas fa-qrcode text-4xl mb-3 text-sky-600"></i>
+                        <p class="text-xs">Quét QR tại điểm tuần tra để xác nhận</p>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'incident'" x-transition x-cloak class="space-y-4">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Báo cáo sự cố</h3>
+                    <div
+                        class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 border-l-4 border-l-red-600">
+                        <p class="text-[10px] font-bold text-red-600 uppercase">Ghi nhận nhanh</p>
+                        <p class="text-xs mt-1 font-semibold">Mất trật tự tại sảnh chờ tầng 1</p>
+                        <button
+                            class="w-full mt-4 py-3 bg-sky-700 text-white rounded-xl font-black uppercase text-[10px]">Gửi
+                            yêu cầu hỗ trợ</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav class="bottom-nav flex justify-around items-center border-t px-4 transition-colors duration-300"
+                :class="darkMode ? 'bg-[#0b1221] border-slate-800' : 'bg-white border-slate-100'">
+
+                <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'home' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Giám sát</span>
+                </button>
+
+                <button @click="tab = 'patrol'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'patrol' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-shoe-prints text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Tuần tra</span>
+                </button>
+
+                <div class="relative -top-6">
+                    <button onclick="alert('Đang kết nối bộ đàm tới trung tâm chỉ huy...')"
+                        class="w-14 h-14 bg-sky-600 rounded-full flex items-center justify-center text-white shadow-xl border-4 transition-transform active:scale-90"
+                        :class="darkMode ? 'border-[#030712]' : 'border-slate-50'">
+                        <i class="fas fa-microphone-alt text-xl"></i>
+                    </button>
+                </div>
+
+                <button @click="tab = 'incident'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'incident' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-shield-virus text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Sự cố</span>
+                </button>
+
+                <button class="flex flex-col items-center gap-1 text-slate-400">
+                    <i class="fas fa-user-shield text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Cá nhân</span>
+                </button>
+            </nav>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

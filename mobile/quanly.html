@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="vi" x-data="{ tab: 'home', darkMode: false }" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP Manager - Executive Gold</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { scp: { bg: '#030712', card: '#111827', primary: '#b45309' } } } }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+
+
+
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 90px;
+            z-index: 50;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .active-tab {
+            color: #b45309 !important;
+        }
+
+        .gold-pulse {
+            animation: pulse-gold 2s infinite;
+        }
+
+        @keyframes pulse-gold {
+            0% {
+                box-shadow: 0 0 0 0px rgba(180, 83, 9, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(180, 83, 9, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(180, 83, 9, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100" oncontextmenu="return false;">
+
+
+    <div class="app-container relative shadow-2xl overflow-hidden transition-colors duration-300"
+        :class="darkMode ? 'bg-[#030712]' : 'bg-slate-50'">
+
+        <header class="p-6 pt-10 flex justify-between items-center z-40"
+            :class="darkMode ? 'bg-[#030712]/90' : 'bg-white shadow-sm'">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-user-tie text-sm"></i>
+                </div>
+                <div>
+                    <h2 class="text-[9px] opacity-50 font-bold uppercase tracking-widest"
+                        :class="darkMode ? 'text-white' : 'text-slate-900'">BAN GIÁM ĐỐC</h2>
+                    <h1 class="text-sm font-black tracking-tight" :class="darkMode ? 'text-white' : 'text-slate-900'">
+                        Hospital Manager</h1>
+                </div>
+            </div>
+            <button onclick="alert('Đang gửi yêu cầu báo cáo tổng hợp...')"
+                class="w-10 h-10 rounded-full flex items-center justify-center bg-amber-600 text-white shadow-lg gold-pulse transition-transform active:scale-90">
+                <i class="fas fa-file-invoice-dollar text-xs"></i>
+            </button>
+        </header>
+
+        <div class="app-content p-5 space-y-6">
+
+            <div x-show="tab === 'home'" x-transition x-cloak class="space-y-6">
+                <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-[9px] opacity-70 font-bold uppercase mb-1">Doanh thu ngày</p>
+                            <h3 class="text-2xl font-black italic">1.84 Tỷ</h3>
+                        </div>
+                        <i class="fas fa-chart-line text-3xl opacity-30"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 border-t border-white/20 pt-4">
+                        <div>
+                            <p class="text-[8px] opacity-70 uppercase font-bold">Lượt khám</p>
+                            <p class="text-sm font-bold">1,250 BN</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] opacity-70 uppercase font-bold">KPI Vận hành</p>
+                            <p class="text-sm font-bold">94%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div @click="tab = 'stats'" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Báo cáo</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Nhân sự</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-hospital-symbol"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Vật tư</span>
+                    </div>
+                    <div @click="tab = 'approve'" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Duyệt chi</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3
+                        class="text-[10px] font-black uppercase mb-4 opacity-50 tracking-widest text-slate-900 dark:text-white">
+                        Chờ phê duyệt</h3>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-amber-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">Mua máy MRI 3.0 Tesla</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-amber-100 text-amber-600 font-bold uppercase">Khẩn
+                                    cấp</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">Khoa Chẩn đoán hình ảnh</p>
+                                <p class="text-[9px] font-bold text-amber-600">Đang chờ (2h)</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-blue-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">Tuyển dụng 05 Bác sĩ Nội</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-blue-100 text-blue-600 font-bold uppercase">Thường</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">Phòng Tổ chức nhân sự</p>
+                                <p class="text-[9px] font-bold text-blue-600">Đang soát xét</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">Gói thầu Vật tư Tiêu hao Q1</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold uppercase">Ưu
+                                    tiên</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">Khoa Dược - Vật tư</p>
+                                <p class="text-[9px] font-bold text-emerald-600">Sẵn sàng duyệt</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="tab === 'stats'" x-transition x-cloak class="space-y-6">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase">Phân tích thống kê</h3>
+                <div class="p-10 border-2 border-dashed rounded-3xl text-center opacity-40"
+                    :class="darkMode ? 'border-slate-800 text-white' : 'border-slate-200'">
+                    <i class="fas fa-chart-area text-3xl mb-3 text-amber-500"></i>
+                    <p class="text-xs text-slate-500">Chạm để xem chi tiết báo cáo doanh thu</p>
+                </div>
+            </div>
+
+            <div x-show="tab === 'approve'" x-transition x-cloak class="space-y-4">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase">Trung tâm Phê duyệt</h3>
+                <div class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-lg">
+                    <p class="text-[10px] font-bold text-amber-600">XÁC NHẬN CHI PHÍ</p>
+                    <p class="text-xs mt-1 font-semibold">Sửa chữa thang máy Khu B - 45,000,000đ</p>
+                    <div class="flex gap-2 mt-4">
+                        <button
+                            class="flex-1 py-2.5 bg-amber-600 text-white rounded-xl font-black uppercase text-[10px]">Phê
+                            duyệt</button>
+                        <button
+                            class="flex-1 py-2.5 bg-slate-100 text-slate-400 rounded-xl font-black uppercase text-[10px]">Từ
+                            chối</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <nav class="bottom-nav flex justify-around items-center border-t px-4 transition-colors duration-300"
+            :class="darkMode ? 'bg-[#0b1221] border-slate-800' : 'bg-white border-slate-100'">
+
+            <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'home' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-tachometer-alt text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Executive</span>
+            </button>
+
+            <button @click="tab = 'stats'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'stats' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-chart-bar text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Thống kê</span>
+            </button>
+
+            <div class="relative -top-6">
+                <button onclick="alert('Đang mở bảng điều khiển tác vụ nhanh...')"
+                    class="w-14 h-14 bg-amber-600 rounded-full flex items-center justify-center text-white shadow-xl border-4 transition-transform active:scale-90"
+                    :class="darkMode ? 'border-[#030712]' : 'border-slate-50'">
+                    <i class="fas fa-th-large text-xl"></i>
+                </button>
+            </div>
+
+            <button @click="tab = 'approve'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'approve' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-clipboard-check text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Duyệt chi</span>
+            </button>
+
+            <button class="flex flex-col items-center gap-1 text-slate-400">
+                <i class="fas fa-cog text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Cài đặt</span>
+            </button>
+        </nav>
+
+    </div>
+
+
+</body>
+
+</html>

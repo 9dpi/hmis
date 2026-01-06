@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="vi" x-data="{ tab: 'home', darkMode: false }" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP Quality Control - Excellence in Healthcare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { scp: { bg: '#030712', card: '#111827', primary: '#7c3aed' } } } }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        
+
+        
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 90px;
+            z-index: 50;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .active-tab {
+            color: #7c3aed !important;
+        }
+
+        .qc-pulse {
+            animation: pulse-purple 2s infinite;
+        }
+
+        @keyframes pulse-purple {
+            0% {
+                box-shadow: 0 0 0 0px rgba(124, 58, 237, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(124, 58, 237, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(124, 58, 237, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100" oncontextmenu="return false;">
+
+    
+        <div class="app-container relative shadow-2xl overflow-hidden transition-colors duration-300" :class="darkMode ? 'bg-[#030712]' : 'bg-slate-50'">
+
+            <header class="p-6 pt-10 flex justify-between items-center z-40"
+                :class="darkMode ? 'bg-[#030712]/90' : 'bg-white shadow-sm'">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-award text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-[9px] opacity-50 font-bold uppercase tracking-widest"
+                            :class="darkMode ? 'text-white' : 'text-slate-900'">PHÒNG QUẢN LÝ CHẤT LƯỢNG</h2>
+                        <h1 class="text-sm font-black tracking-tight"
+                            :class="darkMode ? 'text-white' : 'text-slate-900'">QL. NGUYỄN VĂN E</h1>
+                    </div>
+                </div>
+                <button onclick="alert('Đang tạo báo cáo sự cố khẩn cấp!')"
+                    class="w-10 h-10 rounded-full flex items-center justify-center bg-purple-600 text-white shadow-lg qc-pulse transition-transform active:scale-90">
+                    <i class="fas fa-exclamation-circle text-xs"></i>
+                </button>
+            </header>
+
+            <div class="app-content p-5 space-y-6">
+
+                <div x-show="tab === 'home'" x-transition x-cloak class="space-y-6">
+                    <div class="p-5 rounded-3xl bg-gradient-to-br from-purple-600 to-indigo-900 text-white shadow-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-[9px] opacity-70 font-bold uppercase mb-1">Chỉ số chất lượng (QPI)</p>
+                                <h3 class="text-2xl font-black italic">98.5%</h3>
+                            </div>
+                            <i class="fas fa-check-double text-3xl opacity-20"></i>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                            <div>
+                                <p class="text-[8px] opacity-70 uppercase font-bold">Lỗi quy trình</p>
+                                <p class="text-sm font-bold">02 vụ</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] opacity-70 uppercase font-bold">Đánh giá BN</p>
+                                <p class="text-sm font-bold">4.9/5</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-2 text-center">
+                        <div @click="tab = 'audit'" class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Audit</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-book-medical"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">SOP</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Sự cố</span>
+                        </div>
+                        <div @click="tab = 'kpi'" class="flex flex-col items-center gap-2 cursor-pointer">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">KPIs</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3
+                            class="text-[10px] font-black uppercase mb-4 opacity-50 tracking-widest text-slate-900 dark:text-white">
+                            Chờ phê duyệt</h3>
+                        <div class="space-y-3">
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-purple-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Cập nhật quy trình kiểm soát nhiễm khuẩn
+                                    </h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-purple-100 text-purple-600 font-bold uppercase">Cần
+                                        duyệt</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Áp dụng: Toàn viện</p>
+                                    <p class="text-[9px] font-bold text-purple-600">Ver 2.1</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-red-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Báo cáo sự cố y khoa (RCA)</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-red-100 text-red-600 font-bold uppercase">Ưu
+                                        tiên</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Từ: Khoa Cấp cứu</p>
+                                    <p class="text-[9px] font-bold text-red-600">Chờ phân tích</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-xs font-bold leading-tight">Kế hoạch đánh giá nội bộ năm 2026</h4>
+                                    <span
+                                        class="text-[7px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold uppercase">Hoàn
+                                        tất</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-[9px] opacity-50 italic">Hệ thống: JCI Standard</p>
+                                    <p class="text-[9px] font-bold text-emerald-600">Đã thông qua</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'audit'" x-transition x-cloak class="space-y-6">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Đánh giá hiện trường
+                    </h3>
+                    <div class="p-10 border-2 border-dashed rounded-3xl text-center opacity-40"
+                        :class="darkMode ? 'border-slate-800 text-white' : 'border-slate-200'">
+                        <i class="fas fa-camera text-4xl mb-3 text-purple-500"></i>
+                        <p class="text-xs">Chụp ảnh bằng chứng không tuân thủ</p>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'kpi'" x-transition x-cloak class="space-y-4">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Phân tích sai sót
+                    </h3>
+                    <div
+                        class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 border-l-4 border-l-red-500">
+                        <p class="text-[10px] font-bold text-red-600">CẢNH BÁO XU HƯỚNG</p>
+                        <p class="text-xs mt-1 font-semibold">Tăng 5% sai sót dùng thuốc tại Khoa Nhi</p>
+                        <button
+                            class="w-full mt-4 py-3 bg-purple-600 text-white rounded-xl font-black uppercase text-[10px]">Tổ
+                            chức đào tạo lại</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav class="bottom-nav flex justify-around items-center border-t px-4 transition-colors duration-300"
+                :class="darkMode ? 'bg-[#0b1221] border-slate-800' : 'bg-white border-slate-100'">
+
+                <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'home' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-chart-line text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Tổng quan</span>
+                </button>
+
+                <button @click="tab = 'audit'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'audit' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-tasks text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Audit</span>
+                </button>
+
+                <div class="relative -top-6">
+                    <button onclick="alert('Mở danh sách biểu mẫu kiểm tra nhanh...')"
+                        class="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center text-white shadow-xl border-4 transition-transform active:scale-90"
+                        :class="darkMode ? 'border-[#030712]' : 'border-slate-50'">
+                        <i class="fas fa-th-large text-xl"></i>
+                    </button>
+                </div>
+
+                <button @click="tab = 'kpi'" class="flex flex-col items-center gap-1 transition-all"
+                    :class="tab === 'kpi' ? 'active-tab' : 'text-slate-400'">
+                    <i class="fas fa-chart-pie text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">KPIs</span>
+                </button>
+
+                <button class="flex flex-col items-center gap-1 text-slate-400">
+                    <i class="fas fa-shield-alt text-lg"></i>
+                    <span class="text-[8px] font-bold uppercase">Tiêu chuẩn</span>
+                </button>
+            </nav>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

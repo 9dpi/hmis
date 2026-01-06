@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dưỡng lão Hiếu An | SCP - Vũ Quang Cường</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ĐỒNG BỘ HOÀN TOÀN VỚI INDEX.HTML */
+        :root {
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --text-title: #1d1d1f;
+            --text-desc: #86868b;
+            --accent: #0071e3;
+            --border: #d2d2d7;
+            --warning: #f5a623;
+            --success: #34c759;
+            --shadow: rgba(0, 0, 0, 0.03);
+            --hover-shadow: rgba(0, 0, 0, 0.08);
+            --toggle-bg: #e1e1e1;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text-title: #f8fafc;
+            --text-desc: #94a3b8;
+            --accent: #38bdf8;
+            --border: #334155;
+            --warning: #fbbf24;
+            --success: #4ade80;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --hover-shadow: rgba(0, 0, 0, 0.6);
+            --toggle-bg: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-title);
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+
+        /* CHIỀU NGANG 1280PX KHỚP VỚI TRANG CHỦ */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* BANNER & ẢNH MINH HỌA */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            margin-bottom: 50px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 42px;
+            margin: 10px 0;
+            color: var(--accent);
+            letter-spacing: -1px;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        .detail-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--hover-shadow);
+            border-color: var(--accent);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        .detail-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 19px;
+            color: var(--text-title);
+        }
+
+        .detail-card p {
+            font-size: 14.5px;
+            color: var(--text-desc);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* PHẦN 5W1H TỐI ƯU DARK THEME */
+        .methodology {
+            margin-top: 60px;
+            padding: 40px;
+            border-radius: 30px;
+            background: var(--card);
+            border: 1px dashed var(--accent);
+        }
+
+        .methodology h2 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .w-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .w-item {
+            background: var(--bg);
+            padding: 25px;
+            border-radius: 18px;
+            border-left: 5px solid var(--accent);
+            transition: 0.3s;
+        }
+
+        .w-item:hover {
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .w-item b {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .w-item span {
+            font-size: 15px;
+            color: var(--text-title);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 992px) {
+
+            .hero-section,
+            .detail-grid,
+            .w-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-chevron-left"></i> Dashboard Hệ thống</a>
+            <div class="header-right" style="display: flex; align-items: center; gap: 25px;">
+                <div class="contact-info" style="text-align: right; font-size: 14px; color: var(--text-desc);">
+                    <b>Vũ Quang Cường</b> | 0912 580 018
+                </div>
+                <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()"
+                    style="background:var(--accent); border:none; width:44px; height:44px; border-radius:50%; cursor:pointer; color:white;">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+            </div>
+        </header>
+
+        <section class="hero-section">
+            <div class="hero-text">
+                <div
+                    style="text-transform: uppercase; font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px;">
+                    Dự án Trọng điểm / SCP Medical</div>
+                <h1>Dưỡng lão Hiếu An</h1>
+                <p style="font-size: 19px; color: var(--text-desc); line-height: 1.6;">Số hóa toàn diện quy trình vận
+                    hành và chăm sóc người cao tuổi theo tiêu chuẩn y tế quốc tế JCI, mang lại sự an tâm tuyệt đối cho
+                    gia đình.</p>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=1000"
+                    alt="Dưỡng lão Hiếu An">
+            </div>
+        </section>
+
+        <div class="detail-grid">
+            <div class="detail-card">
+                <div class="card-icon"><i class="fa-solid fa-drafting-dot"></i></div>
+                <h3>Thiết kế & Nội thất JCI</h3>
+                <p>Không gian ánh sáng sinh học, lối đi không vật cản. Hệ thống biển bảng và tem nhãn định danh 2 yếu tố
+                    triệt tiêu sai sót y tế.</p>
+            </div>
+            <div class="detail-card">
+                <div class="card-icon"><i class="fa-solid fa-laptop-medical"></i></div>
+                <h3>Quản lý Số hóa 4.0</h3>
+                <p>Hồ sơ EHR tập trung dữ liệu lâm sàng. Tự động hóa lịch thuốc và thực đơn dinh dưỡng cá nhân hóa theo
+                    bệnh lý nền.</p>
+            </div>
+            <div class="detail-card">
+                <div class="card-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
+                <h3>Cảnh báo Thông minh</h3>
+                <p>AI Vision phát hiện ngã sớm 24/7. Nurse Call 2.0 kết nối trực tiếp đến thiết bị đeo tay của điều
+                    dưỡng trực ca.</p>
+            </div>
+            <div class="detail-card">
+                <div class="card-icon"><i class="fa-solid fa-boxes-packing"></i></div>
+                <h3>Giao nhận & Báo cáo</h3>
+                <p>Kiểm soát thuốc bằng Barcode từ kho đến giường bệnh. Báo cáo liên thông Y tế - Bếp - Vệ sinh cập nhật
+                    trực tiếp cho gia đình.</p>
+            </div>
+            <div class="detail-card">
+                <div class="card-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                <h3>Tình huống Khẩn cấp</h3>
+                <p>Kịch bản Code Blue tự động mở cửa từ tính và ưu tiên thang máy. Di tản thông minh tích hợp hướng dẫn
+                    âm thanh.</p>
+            </div>
+            <div class="detail-card">
+                <div class="card-icon"><i class="fa-solid fa-eye"></i></div>
+                <h3>Camera An ninh AI</h3>
+                <p>Nhận diện vùng nguy hiểm để ngăn chặn đi lạc. Bảo mật quyền riêng tư bằng công nghệ làm mờ khuôn mặt
+                    tự động.</p>
+            </div>
+        </div>
+
+        <div class="methodology">
+            <h2><i class="fa-solid fa-microchip-ai"></i> Phương pháp xử lý thách thức 5W1H</h2>
+            <p style="color: var(--text-desc); margin-bottom: 30px;">Tư duy SCP trong việc giải quyết bài toán chậm tiến
+                độ cung ứng thiết bị IoT từ nước ngoài:</p>
+            <div class="w-grid">
+                <div class="w-item"><b>Who</b> <span>Đội ngũ SCP & Đối tác cung ứng nội địa.</span></div>
+                <div class="w-item"><b>What</b> <span>Tìm kiếm module thay thế có tính năng tương đương.</span></div>
+                <div class="w-item"><b>Where</b> <span>Triển khai tại khu vực ưu tiên (Phòng cấp cứu).</span></div>
+                <div class="w-item"><b>When</b> <span>Thiết lập quy trình xử lý thần tốc trong 48 giờ.</span></div>
+                <div class="w-item"><b>Why</b> <span>Đảm bảo cam kết an toàn cho cư dân đầu tiên.</span></div>
+                <div class="w-item"><b>How</b> <span>Viết lại Firmware tích hợp module vào hệ thống chính.</span></div>
+            </div>
+        </div>
+
+        <footer
+            style="margin-top: 80px; padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-desc); font-size: 14px;">
+            © 2025 Smart Connected Platform | Giải pháp bởi Vũ Quang Cường
+        </footer>
+    </div>
+
+    <script>
+        /* LOGIC THEME VÀ CHAT ĐỒNG BỘ */
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            const btn = document.getElementById('theme-btn');
+            const icon = btn.querySelector('i');
+            if (target === 'dark') { icon.className = 'fa-solid fa-sun'; btn.style.background = "#38bdf8"; }
+            else { icon.className = 'fa-solid fa-moon'; btn.style.background = "#e1e1e1"; }
+        }
+        // Khởi tạo theme từ localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        });
+    </script>
+</body>
+
+</html>

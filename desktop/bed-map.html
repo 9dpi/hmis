@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi" x-data="{
+    darkMode: localStorage.getItem('darkMode') === 'true',
+    mobileMenu: false,
+    bedMapApp: bedMapApp()
+}" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP HMIS - Sơ đồ Giường bệnh</title>
+
+    <!-- ANTI-FLICKER SCRIPT -->
+    <script>
+        (function () {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: {
+                        'xs': '480px',
+                    },
+                    colors: {
+                        scp: { bg: '#0f172a', card: '#1e293b', primary: '#0d9488', accent: '#22d3ee' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <script src="../assets/js/data-store.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body :class="darkMode ? 'dark' : 'light'" class="overflow-hidden" x-data="bedMapApp">
+
+    <!-- Mobile Sidebar Overlay -->
+    <div x-show="mobileMenu" x-cloak
+        class="fixed inset-0 bg-black/60 z-[60] lg:hidden backdrop-blur-sm transition-opacity"
+        @click="mobileMenu = false" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+    </div>
+
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar transition-transform duration-300 z-[70]" :class="{ 'mobile-open': mobileMenu }">
+
+            <div class="logo-frame flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="bg-teal-600 w-12 h-12 flex items-center justify-center rounded-xl shadow-lg text-white text-xl">
+                        <i class="fas fa-hospital-user"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-black tracking-tighter uppercase leading-none"
+                            :class="darkMode ? 'text-white' : 'text-teal-900'">SCP HMIS</h1>
+                        <p class="text-[9px] opacity-60 uppercase tracking-widest mt-1 font-bold text-teal-600">Medical
+                            Center</p>
+                    </div>
+                </div>
+                <button @click="mobileMenu = false" class="lg:hidden p-2 text-slate-400 hover:text-teal-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow py-4 overflow-y-auto custom-scroll">
+                <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống quản trị
+                </div>
+
+                <a href="../index.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-chart-line mr-3"></i> Quản lý bệnh viện
+                </a>
+                <a href="facility.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-layer-group mr-3 text-orange-500"></i> Quản lý Cơ sở vật chất
+                </a>
+                <a href="audit.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-clipboard-check mr-3 text-teal-500"></i> 83 Tiêu chí Chất lượng
+                </a>
+
+                <a href="../show-app.html" target="_blank" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-mobile-alt mr-3"></i> Ứng dụng Mobile App
+                </a>
+
+                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Khu vực
+                    chuyên môn</div>
+                <a href="patients.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-user-injured mr-3"></i> Danh sách bệnh nhân
+                </a>
+                <a href="bed-map.html" class="nav-link active flex items-center px-6 py-3">
+                    <i class="fas fa-procedures mr-3"></i> Sơ đồ giường bệnh
+                </a>
+                <a href="lab-tests.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-microscope mr-3"></i> Xét nghiệm & CĐHA
+                </a>
+
+                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vận hành &
+                    Hậu cần</div>
+                <a href="pharmacy.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-pills mr-3"></i> Quản lý kho dược
+                </a>
+                <a href="billing.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-file-invoice-dollar mr-3"></i> Viện phí & BHYT
+                </a>
+                <a href="equipment.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-tools mr-3"></i> Quản lý thiết bị
+                </a>
+
+                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quản lý & Hỗ
+                    trợ</div>
+                <a href="staff.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-user-tie mr-3"></i> Quản lý nhân sự
+                </a>
+                <a href="housekeeping.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-broom mr-3"></i> Vệ sinh
+                </a>
+                <a href="security.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-shield-alt mr-3"></i> An ninh bảo vệ
+                </a>
+            </nav>
+
+            <div class="p-6 border-t flex items-center justify-between transition-colors"
+                :class="darkMode ? 'border-slate-800' : 'border-teal-100'">
+                <div class="flex items-center gap-3">
+                    <div class="status-dot"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest"
+                        :class="darkMode ? 'text-slate-400' : 'text-teal-700'">Hệ thống sẵn sàng</span>
+                </div>
+                <button @click="darkMode = !darkMode"
+                    class="p-2 bg-teal-800 dark:bg-slate-700 text-teal-100 rounded-lg hover:rotate-12 transition-all">
+                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-container">
+            <header class="main-header shadow-sm">
+                <div class="flex items-center gap-4">
+                    <button @click="mobileMenu = true"
+                        class="lg:hidden p-2 text-slate-500 hover:text-teal-600 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Trung tâm Chỉ huy SCP
+                        </h2>
+                        <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight transition-colors"
+                            :class="darkMode ? 'text-white' : 'text-slate-800'">SƠ ĐỒ GIƯỜNG BỆNH</h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 text-right">
+                    <div class="hidden xs:block">
+                        <p class="text-[9px] opacity-50 uppercase font-bold text-slate-500">Giường</p>
+                        <p class="text-sm md:text-xl font-black text-teal-600 tracking-tighter" x-text="totalBeds"></p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-scroll animate-fade-in">
+                <div class="space-y-6">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <div class="stat-card border-teal-500/20 bg-teal-50/50 dark:bg-teal-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Đang sử
+                                        dụng</p>
+                                    <p class="text-2xl font-black text-teal-600" x-text="occupiedBeds"></p>
+                                </div>
+                                <i class="fas fa-bed text-3xl text-teal-500/30"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card border-green-500/20 bg-green-50/50 dark:bg-green-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Còn
+                                        trống</p>
+                                    <p class="text-2xl font-black text-green-600" x-text="availableBeds"></p>
+                                </div>
+                                <i class="fas fa-check-circle text-3xl text-green-500/30"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card border-yellow-500/20 bg-yellow-50/50 dark:bg-yellow-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Bảo trì
+                                    </p>
+                                    <p class="text-2xl font-black text-yellow-600" x-text="maintenanceBeds"></p>
+                                </div>
+                                <i class="fas fa-tools text-3xl text-yellow-500/30"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card border-purple-500/20 bg-purple-50/50 dark:bg-purple-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Tỷ lệ
+                                        sử dụng</p>
+                                    <p class="text-2xl font-black text-purple-600"
+                                        x-text="Math.round((occupiedBeds/totalBeds)*100) + '%'"></p>
+                                </div>
+                                <i class="fas fa-chart-pie text-3xl text-purple-500/30"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter -->
+                    <div class="stat-card">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <select x-model="filterDepartment"
+                                class="flex-grow sm:flex-none px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-transparent text-sm font-bold outline-none focus:border-teal-500"
+                                :class="darkMode ? 'text-white' : 'text-slate-800'">
+                                <option value="all">Tất cả khoa</option>
+                                <option value="Nội Tổng Quát">Nội Tổng Quát</option>
+                                <option value="Ngoại Khoa">Ngoại Khoa</option>
+                                <option value="Sản">Sản</option>
+                                <option value="Hồi Sức">Hồi Sức</option>
+                            </select>
+
+                            <select x-model="filterStatus"
+                                class="flex-grow sm:flex-none px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-transparent text-sm font-bold outline-none focus:border-teal-500"
+                                :class="darkMode ? 'text-white' : 'text-slate-800'">
+                                <option value="all">Tất cả trạng thái</option>
+                                <option value="available">Còn trống</option>
+                                <option value="occupied">Đang sử dụng</option>
+                                <option value="maintenance">Bảo trì</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Bed Grid -->
+                    <div
+                        class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
+                        <template x-for="bed in filteredBeds" :key="bed.id">
+                            <div @click="selectBed(bed)"
+                                class="stat-card cursor-pointer hover:scale-105 transition-all p-4 text-center" :class="{
+                                    'border-teal-500 bg-teal-50 dark:bg-teal-900/20': bed.status === 'occupied',
+                                    'border-green-500 bg-green-50 dark:bg-green-900/20': bed.status === 'available',
+                                    'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20': bed.status === 'maintenance'
+                                 }">
+                                <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center"
+                                    :class="{
+                                        'bg-teal-500 text-white': bed.status === 'occupied',
+                                        'bg-green-500 text-white': bed.status === 'available',
+                                        'bg-yellow-500 text-white': bed.status === 'maintenance'
+                                     }">
+                                    <i class="fas fa-bed text-xl"></i>
+                                </div>
+                                <p class="text-xs font-black mb-1" :class="darkMode ? 'text-white' : 'text-slate-800'"
+                                    x-text="bed.room"></p>
+                                <p class="text-[10px] font-bold text-slate-500" x-text="bed.bedNumber"></p>
+                                <span class="inline-block mt-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase"
+                                    :class="{
+                                        'bg-teal-500 text-white': bed.status === 'occupied',
+                                        'bg-green-500 text-white': bed.status === 'available',
+                                        'bg-yellow-500 text-white': bed.status === 'maintenance'
+                                      }"
+                                    x-text="bed.status === 'occupied' ? 'Đang dùng' : bed.status === 'available' ? 'Trống' : 'Bảo trì'"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bed Detail Modal -->
+    <div x-show="selectedBed" x-cloak @click.away="selectedBed = null"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div @click.stop
+            class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-teal-500/20">
+            <div class="p-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-black" x-text="selectedBed?.room + ' - ' + selectedBed?.bedNumber"></h3>
+                    <p class="text-sm opacity-80" x-text="selectedBed?.department"></p>
+                </div>
+                <button @click="selectedBed = null" class="text-white/80 hover:text-white text-2xl"><i
+                        class="fas fa-times"></i></button>
+            </div>
+
+            <div class="p-6 space-y-4">
+                <div class="p-4 rounded-xl"
+                    :class="selectedBed?.status === 'occupied' ? 'bg-teal-50 dark:bg-teal-900/20' : selectedBed?.status === 'available' ? 'bg-green-50 dark:bg-green-900/20' : 'bg-yellow-50 dark:bg-yellow-900/20'">
+                    <p class="text-[9px] font-bold uppercase mb-2"
+                        :class="selectedBed?.status === 'occupied' ? 'text-teal-600' : selectedBed?.status === 'available' ? 'text-green-600' : 'text-yellow-600'">
+                        Trạng thái</p>
+                    <p class="text-lg font-black" :class="darkMode ? 'text-white' : 'text-slate-800'"
+                        x-text="selectedBed?.status === 'occupied' ? 'Đang sử dụng' : selectedBed?.status === 'available' ? 'Còn trống' : 'Đang bảo trì'">
+                    </p>
+                </div>
+
+                <template x-if="selectedBed?.status === 'occupied' && selectedBed?.patientId">
+                    <div>
+                        <h4 class="text-sm font-black uppercase mb-3"
+                            :class="darkMode ? 'text-white' : 'text-slate-800'">Thông tin bệnh nhân</h4>
+                        <div class="space-y-2">
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Bệnh nhân</p>
+                                <p class="text-sm font-black" :class="darkMode ? 'text-white' : 'text-slate-800'"
+                                    x-text="getPatientInfo(selectedBed?.patientId)?.name"></p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Chẩn đoán</p>
+                                <p class="text-sm font-bold text-teal-600"
+                                    x-text="getPatientInfo(selectedBed?.patientId)?.diagnosis"></p>
+                            </div>
+                        </div>
+                        <button @click="viewPatient(selectedBed?.patientId)"
+                            class="w-full mt-4 py-3 bg-teal-600 text-white rounded-xl font-black uppercase text-xs hover:bg-teal-700">
+                            <i class="fas fa-user-injured mr-2"></i>Xem hồ sơ bệnh nhân
+                        </button>
+                    </div>
+                </template>
+
+                <template x-if="selectedBed?.status === 'available'">
+                    <button
+                        class="w-full py-3 bg-green-600 text-white rounded-xl font-black uppercase text-xs hover:bg-green-700">
+                        <i class="fas fa-plus mr-2"></i>Nhập bệnh nhân
+                    </button>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function bedMapApp() {
+            return {
+                darkMode: false,
+                beds: [],
+                selectedBed: null,
+                filterDepartment: 'all',
+                filterStatus: 'all',
+
+                init() {
+                    this.beds = window.HMISData.getBeds();
+                },
+
+                get totalBeds() { return this.beds.length; },
+                get occupiedBeds() { return this.beds.filter(b => b.status === 'occupied').length; },
+                get availableBeds() { return this.beds.filter(b => b.status === 'available').length; },
+                get maintenanceBeds() { return this.beds.filter(b => b.status === 'maintenance').length; },
+
+                get filteredBeds() {
+                    return this.beds.filter(bed => {
+                        const matchDept = this.filterDepartment === 'all' || bed.department === this.filterDepartment;
+                        const matchStatus = this.filterStatus === 'all' || bed.status === this.filterStatus;
+                        return matchDept && matchStatus;
+                    });
+                },
+
+                selectBed(bed) { this.selectedBed = bed; },
+
+                getPatientInfo(patientId) {
+                    return window.HMISData.getPatient(patientId);
+                },
+
+                viewPatient(patientId) {
+                    window.location.href = `patients.html?id=${patientId}`;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

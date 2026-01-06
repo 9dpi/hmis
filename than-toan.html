@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>SMC One-Man Army - Thần Toán AI</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Thần Toán AI</h1>
+  <input type="date" id="dob">
+  <button onclick="processNumerology()">Xem kết quả</button>
+  <div id="display" class="result"></div>
+
+  <script>
+    const GAS_URL = "AKfycbzSSu4W-KuHOCYXoGe2hdoPnsisdTBErx8lM2O7gV7YSGGuZAQg5Dw8_82c5zZwqGi6Tw @7"; // Sẽ lấy sau khi deploy GAS
+
+    function processNumerology() {
+      const dob = document.getElementById('dob').value;
+      if (!dob) return alert("Chọn ngày sinh đã bạn ơi!");
+
+      // 1. TÍNH TOÁN TẠI CLIENT (Tốc độ tức thì)
+      const numbers = dob.replace(/-/g, '').split('').map(Number);
+      let sum = numbers.reduce((a, b) => a + b, 0);
+      while (sum > 9 && ![11, 22, 33].includes(sum)) {
+        sum = sum.toString().split('').map(Number).reduce((a, b) => a + b, 0);
+      }
+
+      // 2. HIỂN THỊ NGAY
+      document.getElementById('display').innerText = "Số chủ đạo của bạn là: " + sum;
+
+      // 3. FIRE & FORGET (Gửi ngầm về GAS để lưu Sheets)
+      fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({ date: dob, result: sum, type: "Numerology" })
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi" x-data="{
+    darkMode: localStorage.getItem('darkMode') === 'true',
+    mobileMenu: false,
+    liveKwh: 2450.8,
+    patientsApp: patientsApp()
+}" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP HMIS - Quản lý Bệnh nhân</title>
+
+    <!-- ANTI-FLICKER SCRIPT -->
+    <script>
+        (function () {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: {
+                        'xs': '480px',
+                    },
+                    colors: {
+                        scp: { bg: '#0f172a', card: '#1e293b', primary: '#0d9488', accent: '#22d3ee' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <script src="../assets/js/data-store.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body :class="darkMode ? 'dark' : 'light'" class="overflow-hidden" x-data="patientsApp">
+
+    <!-- Mobile Sidebar Overlay -->
+    <div x-show="mobileMenu" x-cloak
+        class="fixed inset-0 bg-black/60 z-[60] lg:hidden backdrop-blur-sm transition-opacity"
+        @click="mobileMenu = false" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+    </div>
+
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar transition-transform duration-300 z-[70]" :class="{ 'mobile-open': mobileMenu }">
+
+            <div class="logo-frame flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="bg-teal-600 w-12 h-12 flex items-center justify-center rounded-xl shadow-lg text-white text-xl">
+                        <i class="fas fa-hospital-user"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-black tracking-tighter uppercase leading-none"
+                            :class="darkMode ? 'text-white' : 'text-teal-900'">SCP HMIS</h1>
+                        <p class="text-[9px] opacity-60 uppercase tracking-widest mt-1 font-bold text-teal-600">Medical
+                            Center</p>
+                    </div>
+                </div>
+                <button @click="mobileMenu = false" class="lg:hidden p-2 text-slate-400 hover:text-teal-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow py-4 overflow-y-auto custom-scroll">
+                <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống quản trị
+                </div>
+
+                <a href="../index.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-chart-line mr-3"></i> Quản lý bệnh viện
+                </a>
+                <a href="facility.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-layer-group mr-3 text-orange-500"></i> Quản lý Cơ sở vật chất
+                </a>
+                <a href="audit.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-clipboard-check mr-3 text-teal-500"></i> 83 Tiêu chí Chất lượng
+                </a>
+
+                <a href="../show-app.html" target="_blank" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-mobile-alt mr-3"></i> Ứng dụng Mobile App
+                </a>
+
+                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Khu vực
+                    chuyên môn</div>
+                <a href="patients.html" class="nav-link active flex items-center px-6 py-3">
+                    <i class="fas fa-user-injured mr-3"></i> Danh sách bệnh nhân
+                </a>
+                <a href="bed-map.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-procedures mr-3"></i> Sơ đồ giường bệnh
+                </a>
+                <a href="lab-tests.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-microscope mr-3"></i> Xét nghiệm & CĐHA
+                </a>
+
+                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vận hành &
+                    Hậu cần</div>
+                <a href="pharmacy.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-pills mr-3"></i> Quản lý kho dược
+                </a>
+                <a href="billing.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-file-invoice-dollar mr-3"></i> Viện phí & BHYT
+                </a>
+                <a href="equipment.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-tools mr-3"></i> Quản lý thiết bị
+                </a>
+
+                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quản lý & Hỗ
+                    trợ</div>
+                <a href="staff.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-user-tie mr-3"></i> Quản lý nhân sự
+                </a>
+                <a href="housekeeping.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-broom mr-3"></i> Vệ sinh
+                </a>
+                <a href="security.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-shield-alt mr-3"></i> An ninh bảo vệ
+                </a>
+            </nav>
+
+            <div class="p-6 border-t flex items-center justify-between transition-colors"
+                :class="darkMode ? 'border-slate-800' : 'border-teal-100'">
+                <div class="flex items-center gap-3">
+                    <div class="status-dot"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest"
+                        :class="darkMode ? 'text-slate-400' : 'text-teal-700'">Hệ thống sẵn sàng</span>
+                </div>
+                <button @click="darkMode = !darkMode"
+                    class="p-2 bg-teal-800 dark:bg-slate-700 text-teal-100 rounded-lg hover:rotate-12 transition-all">
+                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-container">
+            <header class="main-header shadow-sm">
+                <div class="flex items-center gap-4">
+                    <button @click="mobileMenu = true"
+                        class="lg:hidden p-2 text-slate-500 hover:text-teal-600 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Trung tâm Chỉ huy SCP
+                        </h2>
+                        <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight transition-colors"
+                            :class="darkMode ? 'text-white' : 'text-slate-800'">QUẢN LÝ BỆNH NHÂN</h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 text-right">
+                    <div class="hidden xs:block">
+                        <p class="text-[9px] opacity-50 uppercase font-bold text-slate-500">Đang điều trị</p>
+                        <p class="text-sm md:text-xl font-black text-teal-600 tracking-tighter"
+                            x-text="patients.length"></p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-scroll animate-fade-in">
+                <div class="space-y-6">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <div class="stat-card border-red-500/20 bg-red-50/50 dark:bg-red-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Nguy
+                                        kịch</p>
+                                    <p class="text-2xl font-black text-red-600"
+                                        x-text="patients.filter(p => p.status === 'critical').length"></p>
+                                </div>
+                                <i class="fas fa-exclamation-triangle text-3xl text-red-500/30"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card border-teal-500/20 bg-teal-50/50 dark:bg-teal-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Ổn định
+                                    </p>
+                                    <p class="text-2xl font-black text-teal-600"
+                                        x-text="patients.filter(p => p.status === 'stable').length"></p>
+                                </div>
+                                <i class="fas fa-heartbeat text-3xl text-teal-500/30"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card border-blue-500/20 bg-blue-50/50 dark:bg-blue-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Hồi
+                                        phục</p>
+                                    <p class="text-2xl font-black text-blue-600"
+                                        x-text="patients.filter(p => p.status === 'recovering').length"></p>
+                                </div>
+                                <i class="fas fa-smile text-3xl text-blue-500/30"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-card border-purple-500/20 bg-purple-50/50 dark:bg-purple-900/10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase">Tổng
+                                        giường</p>
+                                    <p class="text-2xl font-black text-purple-600">500</p>
+                                </div>
+                                <i class="fas fa-bed text-3xl text-purple-500/30"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="stat-card">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1 relative">
+                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input type="text" x-model="searchQuery" placeholder="Tìm kiếm tên, mã BN, chẩn đoán..."
+                                    class="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-transparent text-sm font-medium outline-none focus:border-teal-500"
+                                    :class="darkMode ? 'text-white' : 'text-slate-800'">
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <select x-model="filterStatus"
+                                    class="px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-transparent text-sm font-bold outline-none focus:border-teal-500"
+                                    :class="darkMode ? 'text-white' : 'text-slate-800'">
+                                    <option value="all">Tất cả trạng thái</option>
+                                    <option value="critical">Nguy kịch</option>
+                                    <option value="stable">Ổn định</option>
+                                    <option value="recovering">Hồi phục</option>
+                                </select>
+                                <select x-model="filterDepartment"
+                                    class="px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-transparent text-sm font-bold outline-none focus:border-teal-500"
+                                    :class="darkMode ? 'text-white' : 'text-slate-800'">
+                                    <option value="all">Tất cả khoa</option>
+                                    <option value="Nội Tổng Quát">Nội Tổng Quát</option>
+                                    <option value="Ngoại Khoa">Ngoại Khoa</option>
+                                    <option value="Sản">Sản</option>
+                                    <option value="Hồi Sức">Hồi Sức</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Patient List -->
+                    <div class="space-y-3">
+                        <template x-for="patient in filteredPatients" :key="patient.id">
+                            <div @click="selectedPatient = patient; showPatientDetail = true"
+                                class="stat-card cursor-pointer hover:border-teal-500 transition-all"
+                                :class="{'border-l-4 border-l-red-500': patient.status === 'critical', 'border-l-4 border-l-teal-500': patient.status === 'stable', 'border-l-4 border-l-blue-500': patient.status === 'recovering'}">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl font-black"
+                                        :class="patient.status === 'critical' ? 'bg-red-500' : (patient.status === 'stable' ? 'bg-teal-500' : 'bg-blue-500')">
+                                        <i class="fas" :class="patient.gender === 'Nam' ? 'fa-mars' : 'fa-venus'"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <div>
+                                                <h4 class="text-sm font-black mb-1"
+                                                    :class="darkMode ? 'text-white' : 'text-slate-800'"
+                                                    x-text="patient.name"></h4>
+                                                <p class="text-[9px] font-bold text-slate-500 uppercase"
+                                                    x-text="patient.id + ' • ' + patient.age + ' tuổi • ' + patient.gender">
+                                                </p>
+                                            </div>
+                                            <span class="px-3 py-1 rounded-full text-[8px] font-black uppercase"
+                                                :class="patient.status === 'critical' ? 'bg-red-100 text-red-700 dark:bg-red-900/30' : (patient.status === 'stable' ? 'bg-teal-100 text-teal-700 dark:bg-teal-900/30' : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30')"
+                                                x-text="patient.status === 'critical' ? 'Nguy kịch' : (patient.status === 'stable' ? 'Ổn định' : 'Hồi phục')"></span>
+                                        </div>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-[10px]">
+                                            <div>
+                                                <p class="text-slate-400 font-bold uppercase mb-0.5">Phòng</p>
+                                                <p class="font-black"
+                                                    :class="darkMode ? 'text-white' : 'text-slate-800'"
+                                                    x-text="patient.room"></p>
+                                            </div>
+                                            <div>
+                                                <p class="text-slate-400 font-bold uppercase mb-0.5">Khoa</p>
+                                                <p class="font-black"
+                                                    :class="darkMode ? 'text-white' : 'text-slate-800'"
+                                                    x-text="patient.department"></p>
+                                            </div>
+                                            <div>
+                                                <p class="text-slate-400 font-bold uppercase mb-0.5">Chẩn đoán</p>
+                                                <p class="font-bold text-teal-600" x-text="patient.diagnosis"></p>
+                                            </div>
+                                            <div>
+                                                <p class="text-slate-400 font-bold uppercase mb-0.5">Bác sỹ</p>
+                                                <p class="font-black"
+                                                    :class="darkMode ? 'text-white' : 'text-slate-800'"
+                                                    x-text="patient.doctor"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-slate-300"></i>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Detail Modal -->
+    <div x-show="showPatientDetail" x-cloak @click.away="showPatientDetail = false"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div @click.stop
+            class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-teal-500/20">
+            <div class="p-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-black">
+                        <i class="fas" :class="selectedPatient?.gender === 'Nam' ? 'fa-mars' : 'fa-venus'"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black" x-text="selectedPatient?.name"></h3>
+                        <p class="text-sm opacity-80"
+                            x-text="selectedPatient?.id + ' • ' + selectedPatient?.age + ' tuổi'"></p>
+                    </div>
+                </div>
+                <button @click="showPatientDetail = false" class="text-white/80 hover:text-white text-2xl"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scroll">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Phòng/Giường</p>
+                        <p class="text-lg font-black" :class="darkMode ? 'text-white' : 'text-slate-800'"
+                            x-text="selectedPatient?.room"></p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Khoa điều trị</p>
+                        <p class="text-lg font-black" :class="darkMode ? 'text-white' : 'text-slate-800'"
+                            x-text="selectedPatient?.department"></p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800">
+                    <p class="text-[9px] font-bold text-teal-600 uppercase mb-2">Chẩn đoán</p>
+                    <p class="text-sm font-bold" :class="darkMode ? 'text-white' : 'text-slate-800'"
+                        x-text="selectedPatient?.diagnosis"></p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-black mb-3 uppercase" :class="darkMode ? 'text-white' : 'text-slate-800'">
+                        Sinh hiệu</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100">
+                            <p class="text-[8px] font-bold text-red-600 uppercase mb-1">Nhiệt độ</p>
+                            <p class="text-xl font-black text-red-600" x-text="selectedPatient?.vitals?.temp + '°C'">
+                            </p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100">
+                            <p class="text-[8px] font-bold text-blue-600 uppercase mb-1">Huyết áp</p>
+                            <p class="text-xl font-black text-blue-600" x-text="selectedPatient?.vitals?.bp"></p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100">
+                            <p class="text-[8px] font-bold text-purple-600 uppercase mb-1">Nhịp tim</p>
+                            <p class="text-xl font-black text-purple-600" x-text="selectedPatient?.vitals?.hr + ' bpm'">
+                            </p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-900/20 border border-teal-100">
+                            <p class="text-[8px] font-bold text-teal-600 uppercase mb-1">SpO2</p>
+                            <p class="text-xl font-black text-teal-600" x-text="selectedPatient?.vitals?.spo2 + '%'">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        class="flex-1 py-3 bg-teal-600 text-white rounded-xl font-black uppercase text-xs hover:bg-teal-700 transition-colors">
+                        <i class="fas fa-notes-medical mr-2"></i>Xem bệnh án
+                    </button>
+                    <button
+                        class="flex-1 py-3 bg-blue-600 text-white rounded-xl font-black uppercase text-xs hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-file-medical mr-2"></i>Chỉ định
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function patientsApp() {
+            return {
+                patients: [],
+                searchQuery: '',
+                filterStatus: 'all',
+                filterDepartment: 'all',
+                selectedPatient: null,
+                showPatientDetail: false,
+
+                init() {
+                    if (window.HMISData) {
+                        this.patients = window.HMISData.getPatients();
+                    }
+                },
+
+                get filteredPatients() {
+                    return this.patients.filter(p => {
+                        const matchSearch = this.searchQuery === '' ||
+                            p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                            p.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                            p.diagnosis.toLowerCase().includes(this.searchQuery.toLowerCase());
+                        const matchStatus = this.filterStatus === 'all' || p.status === this.filterStatus;
+                        const matchDepartment = this.filterDepartment === 'all' || p.department === this.filterDepartment;
+                        return matchSearch && matchStatus && matchDepartment;
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

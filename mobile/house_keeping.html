@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi" x-data="housekeepingApp()">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP-HMIS Mobile | Quản lý Vận hành</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        scp: {
+                            active: '#065f46', // Xanh Emerald đậm cho Card
+                            primary: '#10b981',
+                            danger: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+
+        function housekeepingApp() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                tab: 'home',
+                staffList: ['Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C', 'Phạm Minh D', 'Hoàng Thị E'],
+                staffName: urlParams.get('staff') || '',
+                location: urlParams.get('loc') || '',
+                photo: null,
+                status: 'CHƯA HOÀN THÀNH',
+                showScanner: false,
+                secondsLeft: 3 * 60 * 60,
+                nextLocations: [
+                    { id: 'P02', loc: 'Phòng mổ số 02', when: '14:30', what: 'Vệ sinh/Khử khuẩn', done: false },
+                    { id: 'ICU', loc: 'Khoa Hồi sức (ICU)', when: '15:15', what: 'Vệ sinh/Khử khuẩn', done: false }
+                ],
+
+                init() {
+                    this.startTimer();
+                    this.syncNextLocations();
+                },
+                startTimer() { setInterval(() => { if (this.secondsLeft > 0) this.secondsLeft--; }, 1000); },
+                formatTime() {
+                    const h = Math.floor(this.secondsLeft / 3600);
+                    const m = Math.floor((this.secondsLeft % 3600) / 60);
+                    const s = this.secondsLeft % 60;
+                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                },
+
+                takePhoto() {
+                    const input = document.createElement('input');
+                    input.type = 'file'; input.accept = 'image/*'; input.capture = 'environment';
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (f) => {
+                                const img = new Image();
+                                img.src = f.target.result;
+                                img.onload = () => {
+                                    const canvas = document.createElement('canvas');
+                                    const ctx = canvas.getContext('2d');
+                                    const scale = 800 / img.width;
+                                    canvas.width = 800; canvas.height = img.height * scale;
+                                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                    this.photo = canvas.toDataURL('image/jpeg', 0.7);
+                                };
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                    input.click();
+                },
+
+                canSubmit() { return this.staffName && this.location && this.photo; },
+
+                async submitToN8N(type, detail = '') {
+                    if (!this.canSubmit() && type === 'success') {
+                        alert('⚠️ Yêu cầu đủ: Tên + Vị trí + Ảnh chụp hiện trường!');
+                        return;
+                    }
+                    this.status = 'ĐANG ĐỒNG BỘ...';
+                    const payload = {
+                        who: this.staffName,
+                        where: this.location,
+                        when: new Date().toLocaleString('vi-VN'),
+                        what: type === 'success' ? 'Vệ sinh hoàn tất' : 'Báo cáo sự cố',
+                        image: this.photo || 'Không có ảnh',
+                        how: detail || 'Chuẩn Quy trình 5 bước'
+                    };
+                    try {
+                        const res = await fetch('https://cuongvq.app.n8n.cloud/webhook/9ea18e4f-8a50-46ce-8632-186ac8660948', {
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            alert('✅ SCP-HMIS: Đã ghi nhận hoàn thành!');
+                            this.status = 'ĐÃ HOÀN THÀNH';
+                            this.secondsLeft = 3 * 60 * 60;
+                            this.photo = null;
+                        }
+                    } catch (e) { alert('❌ Lỗi kết nối!'); }
+                },
+
+                async syncNextLocations() {
+                    const SHEET_ID = '1_aMJkXZxN49COn9p2a64yNCtegPF1mlhL4M66q9JGfU';
+                    const API_KEY = 'AIzaSyArA7XDisEHeSB3aiac7gv5F9KahiAZ0sU';
+                    try {
+                        const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:G500?key=${API_KEY}`);
+                        const data = await res.json();
+                        if (data.values) {
+                            this.nextLocations.forEach(item => {
+                                item.done = data.values.some(row => row[2] === item.loc && row[4] === 'Vệ sinh hoàn tất');
+                            });
+                        }
+                    } catch (e) { }
+                },
+                startScan() {
+                    this.showScanner = true;
+                    new Html5Qrcode("reader").start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
+                        this.location = text; this.showScanner = false;
+                        this.status = 'CHƯA HOÀN THÀNH';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100" oncontextmenu="return false;">
+    <div class="app-container relative shadow-2xl overflow-hidden">
+
+        <header
+            class="p-6 pt-10 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur-md z-40 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-hospital-user"></i>
+                </div>
+                <div>
+                    <h2 class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                        x-text="location ? 'Đang tại: ' + location : 'Chưa quét mã vị trí'"></h2>
+                    <h1 class="text-sm font-black text-slate-900" x-text="staffName || 'Hãy xác thực danh tính'"></h1>
+                </div>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"><i
+                    class="fas fa-shield-alt text-xs"></i></div>
+        </header>
+
+        <div class="app-content p-5 space-y-6 pb-28">
+
+            <section class="space-y-3">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">1. Xác thực
+                    nhân viên</label>
+                <select x-model="staffName"
+                    class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold outline-none shadow-sm transition-all focus:border-emerald-500">
+                    <option value="" disabled selected>-- Chọn tên của bạn --</option>
+                    <template x-for="name in staffList">
+                        <option :value="name" x-text="name"></option>
+                    </template>
+                </select>
+            </section>
+
+            <section class="space-y-3">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">2. Ảnh chụp
+                    hiện trường</label>
+                <div @click="takePhoto()"
+                    class="w-full h-40 rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center bg-slate-50 overflow-hidden relative active:scale-95 transition-all">
+                    <template x-if="!photo">
+                        <div class="text-center">
+                            <i class="fas fa-camera text-2xl text-slate-300 mb-2"></i>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">Chạm để chụp ảnh bằng chứng</p>
+                        </div>
+                    </template>
+                    <template x-if="photo">
+                        <img :src="photo" class="w-full h-full object-cover">
+                    </template>
+                </div>
+            </section>
+
+            <section>
+                <div class="p-[1px] rounded-[2.5rem] bg-emerald-200 shadow-xl overflow-hidden">
+                    <div class="p-6 rounded-[2.4rem] bg-scp-active space-y-5 text-white relative">
+
+                        <div class="flex justify-between items-center">
+                            <span
+                                class="px-3 py-1 rounded-full bg-white/20 text-[9px] font-black uppercase tracking-tighter">Báo
+                                cáo Vệ sinh</span>
+                            <span class="text-[14px] font-mono font-black text-emerald-300"
+                                x-text="formatTime()"></span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-y-4 text-[11px]">
+                            <div>
+                                <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Vị trí</p>
+                                <p class="font-black" x-text="location || '---'"></p>
+                            </div>
+                            <div>
+                                <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Tình trạng</p>
+                                <p class="font-black" x-text="status"></p>
+                            </div>
+                            <div>
+                                <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Làm gì</p>
+                                <p class="font-black text-white">Vệ sinh/Khử khuẩn</p>
+                            </div>
+                            <div>
+                                <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Quy trình</p>
+                                <p class="font-black text-white">Chuẩn Quy trình 5 bước</p>
+                            </div>
+                        </div>
+
+                        <button @click="submitToN8N('success')" :disabled="!canSubmit()"
+                            class="w-full py-4 rounded-2xl font-black uppercase text-xs shadow-lg transition-all flex items-center justify-center gap-2"
+                            :class="canSubmit() ? 'bg-white text-emerald-900 active:scale-95' : 'bg-emerald-800/50 text-emerald-400/50 cursor-not-allowed border border-emerald-700'">
+                            <i class="fas fa-check-circle"></i> Gửi xác nhận vệ sinh
+                        </button>
+
+                        <i class="fas fa-soap absolute -right-6 -bottom-6 text-9xl text-white/5 rotate-12"></i>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-2 gap-4">
+                <div @click="tab = 'report'"
+                    class="p-5 rounded-3xl bg-red-50 text-red-500 flex flex-col items-center gap-2 border border-red-100 active:scale-95 transition-all shadow-sm">
+                    <i class="fas fa-tools text-xl"></i><span class="text-[9px] font-black uppercase">Báo sự cố</span>
+                </div>
+                <div @click="tab = 'supplies'"
+                    class="p-5 rounded-3xl bg-blue-50 text-blue-500 flex flex-col items-center gap-2 border border-blue-100 active:scale-95 transition-all shadow-sm">
+                    <i class="fas fa-box-open text-xl"></i><span class="text-[9px] font-black uppercase">Vật tư y
+                        tế</span>
+                </div>
+            </section>
+
+            <section class="space-y-4">
+                <h3 class="text-[10px] font-black uppercase opacity-40 tracking-widest flex items-center gap-2 px-1"><i
+                        class="fas fa-route"></i> Lịch trình điểm đến tiếp theo</h3>
+                <div class="space-y-3">
+                    <template x-for="next in nextLocations">
+                        <div class="p-4 rounded-2xl border bg-white shadow-sm flex gap-4 items-center transition-all"
+                            :class="next.done ? 'opacity-40 grayscale' : 'border-emerald-100'">
+                            <div class="w-11 h-11 rounded-full flex items-center justify-center font-black text-[10px]"
+                                :class="next.done ? 'bg-slate-100 text-slate-400' : 'bg-emerald-50 text-emerald-600'"
+                                x-text="next.when"></div>
+                            <div class="flex-1">
+                                <h4 class="text-[11px] font-black text-slate-700 mb-1" x-text="next.loc"></h4>
+                                <div class="flex gap-3 text-[8px] font-bold uppercase tracking-tighter"
+                                    :class="next.done ? 'text-slate-400' : 'text-slate-500'">
+                                    <span class="flex items-center gap-1"><i class="fas fa-tasks text-[7px]"></i> <span
+                                            x-text="next.what"></span></span>
+                                    <span class="flex items-center gap-1 font-black"
+                                        :class="next.done ? 'text-emerald-500' : 'text-orange-400'"><i class="fas"
+                                            :class="next.done ? 'fa-check' : 'fa-hourglass-start'"></i> <span
+                                            x-text="next.done ? 'ĐÃ HOÀN TẤT' : 'ĐANG CHỜ'"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+        </div>
+
+        <nav
+            class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[450px] h-[85px] flex justify-around items-center border-t bg-white/95 backdrop-blur-md z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+            <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'home' ? 'text-emerald-600' : 'text-slate-400'"><i
+                    class="fas fa-clipboard-list text-xl"></i><span class="text-[8px] font-bold uppercase">Nhiệm
+                    vụ</span></button>
+            <div class="relative -top-5"><button @click="startScan()"
+                    class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-xl border-4 border-white active:scale-90 transition-all"><i
+                        class="fas fa-qrcode text-2xl"></i></button></div>
+            <button @click="alert('SCP-HMIS: Chưa có thông báo mới')"
+                class="flex flex-col items-center gap-1 text-slate-400"><i class="fas fa-bell text-xl"></i><span
+                    class="text-[8px] font-bold uppercase">Thông báo</span></button>
+        </nav>
+    </div>
+
+    <div x-show="showScanner" x-cloak class="fixed inset-0 z-[100] bg-black flex flex-col">
+        <div class="p-6 text-white flex justify-between items-center border-b border-white/10"><span
+                class="font-bold">QUÉT MÃ VỊ TRÍ PHÒNG</span><button @click="showScanner = false"
+                class="text-3xl">&times;</button></div>
+        <div id="reader" class="flex-1"></div>
+        <div class="p-8 text-white/60 text-center text-[10px] uppercase font-bold tracking-widest">Đưa mã QR vào khung
+            ngắm</div>
+    </div>
+
+    <script>
+        // Khóa phím chức năng bảo mật
+        document.onkeydown = function (e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false;
+        };
+    </script>
+</body>
+
+</html>

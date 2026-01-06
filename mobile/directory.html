@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP HMIS - Pages Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2dd4bf;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #0d9488;
+            box-shadow: 0 10px 30px rgba(13, 148, 136, 0.2);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #0d9488, #2dd4bf);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: #0d9488;
+            border-color: #0d9488;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="../index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Về trang chính
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-hospital-user"></i> SCP HMIS</h1>
+            <p class="subtitle">Hệ thống quản lý các phòng ban chuyên môn</p>
+        </div>
+
+        <div class="grid">
+            <a href="anninh_baove.html" class="card">
+                <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="card-title">An ninh Bảo vệ</div>
+                <div class="card-desc">Quản lý lực lượng an ninh, giám sát và kiểm soát ra vào</div>
+            </a>
+
+            <a href="bacsy.html" class="card">
+                <div class="card-icon"><i class="fas fa-user-md"></i></div>
+                <div class="card-title">Bác sỹ</div>
+                <div class="card-desc">Quản lý đội ngũ bác sỹ, lịch trực và chuyên môn</div>
+            </a>
+
+            <a href="benh_nhan.html" class="card">
+                <div class="card-icon"><i class="fas fa-user-injured"></i></div>
+                <div class="card-title">Bệnh nhân</div>
+                <div class="card-desc">Quản lý hồ sơ bệnh án, lịch khám và điều trị</div>
+            </a>
+
+            <a href="bep.html" class="card">
+                <div class="card-icon"><i class="fas fa-utensils"></i></div>
+                <div class="card-title">Bếp ăn</div>
+                <div class="card-desc">Quản lý thực đơn, dinh dưỡng và phục vụ bữa ăn</div>
+            </a>
+
+            <a href="dieuduong.html" class="card">
+                <div class="card-icon"><i class="fas fa-user-nurse"></i></div>
+                <div class="card-title">Điều dưỡng</div>
+                <div class="card-desc">Quản lý đội ngũ điều dưỡng, chăm sóc bệnh nhân</div>
+            </a>
+
+            <a href="house_keeping.html" class="card">
+                <div class="card-icon"><i class="fas fa-broom"></i></div>
+                <div class="card-title">Vệ sinh</div>
+                <div class="card-desc">Quản lý công tác vệ sinh, khử khuẩn môi trường</div>
+            </a>
+
+            <a href="kehoach_tonghop.html" class="card">
+                <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="card-title">Kế hoạch Tổng hợp</div>
+                <div class="card-desc">Lập và theo dõi kế hoạch hoạt động bệnh viện</div>
+            </a>
+
+            <a href="kho.html" class="card">
+                <div class="card-icon"><i class="fas fa-warehouse"></i></div>
+                <div class="card-title">Kho</div>
+                <div class="card-desc">Quản lý vật tư, thiết bị y tế và dược phẩm</div>
+            </a>
+
+            <a href="laixe_capcuu.html" class="card">
+                <div class="card-icon"><i class="fas fa-ambulance"></i></div>
+                <div class="card-title">Lái xe Cấp cứu</div>
+                <div class="card-desc">Quản lý đội xe cấp cứu, lái xe và lịch trình</div>
+            </a>
+
+            <a href="nhanvien_kythat_thietbi.html" class="card">
+                <div class="card-icon"><i class="fas fa-tools"></i></div>
+                <div class="card-title">Kỹ thuật Thiết bị</div>
+                <div class="card-desc">Quản lý bảo trì thiết bị y tế và hạ tầng kỹ thuật</div>
+            </a>
+
+            <a href="quanly.html" class="card">
+                <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+                <div class="card-title">Quản lý</div>
+                <div class="card-desc">Quản lý điều hành, báo cáo tổng hợp</div>
+            </a>
+
+            <a href="quanly_chatluong.html" class="card">
+                <div class="card-icon"><i class="fas fa-star"></i></div>
+                <div class="card-title">Quản lý Chất lượng</div>
+                <div class="card-desc">Giám sát chất lượng dịch vụ, tiêu chuẩn bệnh viện</div>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
