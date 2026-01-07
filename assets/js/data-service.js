@@ -101,5 +101,25 @@ function startHKFlow(alpineData) {
     setInterval(updateHK, 30000);
 }
 
-// Make function available globally
+/**
+ * Fetch schedule from Sheet1 (assuming it contains the cleaning schedule)
+ */
+async function fetchHousekeepingSchedule() {
+    // We use the JSON endpoint for now, or direct Sheets API if preferred.
+    // Simplifying: we'll fetch from the same GAS endpoint if it supports it, 
+    // or simulate for now until GAS is updated.
+    try {
+        const logs = await fetchHousekeepingData();
+        // Generate a pseudo-schedule based on known locations or fixed list
+        const locations = ['Phòng Lab 01', 'Phòng Mổ 02', 'Sảnh Chính', 'ICU', 'Khu Vệ Sinh'];
+        return locations.map((loc, i) => {
+            const time = (8 + i) + ':00';
+            const isDone = logs.some(l => l.loc === loc);
+            return { loc, time, done: isDone, what: 'Vệ sinh định kỳ' };
+        });
+    } catch (e) { return []; }
+}
+
+// Make functions available globally
 window.startHKFlow = startHKFlow;
+window.fetchHousekeepingSchedule = fetchHousekeepingSchedule;
