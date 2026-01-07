@@ -88,10 +88,10 @@
                 </div>
             </header>
 
-            <div class="content-scroll animate-fade-in">
-                <div class="space-y-6">
+            <div class="content-scroll animate-fade-in" id="main-content-scroll">
+                <div class="space-y-6 min-h-full flex flex-col">
                     <!-- Stats Cards -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 flex-shrink-0">
                         <div class="stat-card border-green-500/20 bg-green-50/50 dark:bg-green-900/10">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -138,7 +138,7 @@
                     </div>
 
                     <!-- Cleaning Schedule & Sync Status -->
-                    <div class="stat-card">
+                    <div class="stat-card flex-shrink-0">
                         <div class="flex justify-between items-center mb-6">
                             <div>
                                 <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Lịch nhắc vệ
@@ -174,7 +174,7 @@
                     </div>
 
                     <!-- Live Evidence Feed -->
-                    <div class="stat-card">
+                    <div class="stat-card flex-grow">
                         <div class="flex justify-between items-center mb-6">
                             <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Báo cáo hiện
                                 trường Live</h4>
@@ -190,7 +190,8 @@
                                     class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-all group">
                                     <div class="relative h-40 overflow-hidden cursor-pointer"
                                         @click="window.open(log.photo, '_blank')">
-                                        <img :src="log.photo || '../assets/images/no-photo.jpg'"
+                                        <img :src="log.photo"
+                                            onerror="this.src='https://placehold.co/600x400/0f172a/0d9488?text=SCP+HMIS+Photo'"
                                             class="w-full h-full object-cover transition-transform group-hover:scale-110">
                                         <div class="absolute top-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-[8px] font-black text-white uppercase"
                                             x-text="log.time"></div>
@@ -283,6 +284,9 @@
                 schedule: [],
                 lastHkUpdate: 'Đang kết nối...',
                 async init() {
+                    const scrollArea = document.getElementById('main-content-scroll');
+                    if (scrollArea) scrollArea.scrollTop = 0;
+
                     if (typeof startHKFlow === 'function') {
                         startHKFlow(this);
                     }
