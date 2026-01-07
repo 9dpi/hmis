@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" x-data="{
     darkMode: localStorage.getItem('darkMode') === 'true',
     mobileMenu: false,
@@ -43,7 +43,9 @@
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <script src="../assets/js/data-store.js"></script>
+    <script src="../assets/js/data-service.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../assets/js/sidebar-sync.js"></script>
 </head>
 
 <body :class="darkMode ? 'dark' : 'light'" class="overflow-hidden" x-data="housekeepingApp">
@@ -59,94 +61,7 @@
 
     <div class="app-wrapper">
         <!-- Sidebar -->
-        <aside class="sidebar transition-transform duration-300 z-[70]" :class="{ 'mobile-open': mobileMenu }">
-
-            <div class="logo-frame flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div
-                        class="bg-teal-600 w-12 h-12 flex items-center justify-center rounded-xl shadow-lg text-white text-xl">
-                        <i class="fas fa-hospital-user"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-black tracking-tighter uppercase leading-none"
-                            :class="darkMode ? 'text-white' : 'text-teal-900'">SCP HMIS</h1>
-                        <p class="text-[9px] opacity-60 uppercase tracking-widest mt-1 font-bold text-teal-600">Medical
-                            Center</p>
-                    </div>
-                </div>
-                <button @click="mobileMenu = false" class="lg:hidden p-2 text-slate-400 hover:text-teal-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-
-            <nav class="flex-grow py-4 overflow-y-auto custom-scroll">
-                <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống quản trị
-                </div>
-
-                <a href="../index.html" class="nav-link flex items-center px-6 py-4">
-                    <i class="fas fa-chart-line mr-3"></i> Quản lý bệnh viện
-                </a>
-                <a href="facility.html" class="nav-link flex items-center px-6 py-4">
-                    <i class="fas fa-layer-group mr-3 text-orange-500"></i> Quản lý Cơ sở vật chất
-                </a>
-                <a href="audit.html" class="nav-link flex items-center px-6 py-4">
-                    <i class="fas fa-clipboard-check mr-3 text-teal-500"></i> 83 Tiêu chí Chất lượng
-                </a>
-
-                <a href="../show-app.html" target="_blank" class="nav-link flex items-center px-6 py-4">
-                    <i class="fas fa-mobile-alt mr-3"></i> Ứng dụng Mobile App
-                </a>
-
-                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Khu vực
-                    chuyên môn</div>
-                <a href="patients.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-user-injured mr-3"></i> Danh sách bệnh nhân
-                </a>
-                <a href="bed-map.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-procedures mr-3"></i> Sơ đồ giường bệnh
-                </a>
-                <a href="lab-tests.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-microscope mr-3"></i> Xét nghiệm & CĐHA
-                </a>
-
-                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vận hành &
-                    Hậu cần</div>
-                <a href="pharmacy.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-pills mr-3"></i> Quản lý kho dược
-                </a>
-                <a href="billing.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-file-invoice-dollar mr-3"></i> Viện phí & BHYT
-                </a>
-                <a href="equipment.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-tools mr-3"></i> Quản lý thiết bị
-                </a>
-
-                <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quản lý & Hỗ
-                    trợ</div>
-                <a href="staff.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-user-tie mr-3"></i> Quản lý nhân sự
-                </a>
-                <a href="housekeeping.html" class="nav-link active flex items-center px-6 py-3">
-                    <i class="fas fa-broom mr-3"></i> Vệ sinh
-                </a>
-                <a href="security.html" class="nav-link flex items-center px-6 py-3">
-                    <i class="fas fa-shield-alt mr-3"></i> An ninh bảo vệ
-                </a>
-            </nav>
-
-            <div class="p-6 border-t flex items-center justify-between transition-colors"
-                :class="darkMode ? 'border-slate-800' : 'border-teal-100'">
-                <div class="flex items-center gap-3">
-                    <div class="status-dot"></div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest"
-                        :class="darkMode ? 'text-slate-400' : 'text-teal-700'">Hệ thống sẵn sàng</span>
-                </div>
-                <button @click="darkMode = !darkMode"
-                    class="p-2 bg-teal-800 dark:bg-slate-700 text-teal-100 rounded-lg hover:rotate-12 transition-all">
-                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
-                </button>
-            </div>
-        </aside>
+        <aside class="sidebar"><div class="flex items-center justify-center h-full"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div></div></aside>
 
         <div class="main-container">
             <header class="main-header shadow-sm">
@@ -219,7 +134,50 @@
                         </div>
                     </div>
 
-                    <!-- Cleanliness Status Grid -->
+                    <!-- Live Evidence Feed (New Section) -->
+                    <div class="stat-card">
+                        <div class="flex justify-between items-center mb-6">
+                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Báo cáo hiện
+                                trường Live</h4>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[8px] text-teal-600 font-bold uppercase"
+                                    x-text="'Cập nhật: ' + lastHkUpdate"></span>
+                                <div class="status-dot animate-pulse"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <template x-for="log in housekeepingLogs" :key="log.time">
+                                <div
+                                    class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-all group">
+                                    <div class="relative h-40 overflow-hidden cursor-pointer"
+                                        @click="window.open(log.photo, '_blank')">
+                                        <img :src="log.photo || '../assets/images/no-photo.jpg'"
+                                            class="w-full h-full object-cover transition-transform group-hover:scale-110">
+                                        <div class="absolute top-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-[8px] font-black text-white uppercase"
+                                            x-text="log.time"></div>
+                                    </div>
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h5 class="text-xs font-black text-slate-800 dark:text-white"
+                                                x-text="log.loc"></h5>
+                                            <span
+                                                class="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-700 uppercase">Hoàn
+                                                tất</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-[9px] font-bold text-slate-500">
+                                            <i class="fas fa-user-circle text-teal-500 text-xs"></i>
+                                            <span x-text="log.staff"></span>
+                                        </div>
+                                        <div x-show="log.note"
+                                            class="mt-2 text-[9px] text-slate-400 italic bg-slate-50 dark:bg-slate-900/50 p-2 rounded-lg"
+                                            x-text="log.note"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Cleanliness Status Grid (Legacy / Areas) -->
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                         <template x-for="log in logs" :key="log.id">
                             <div class="stat-card p-4 flex flex-col justify-between"
@@ -310,17 +268,15 @@
     <script>
         function housekeepingApp() {
             return {
-                darkMode: false,
-                logs: [
-                    { id: 1, area: 'Sảnh Đón Tiếp', status: 'Clean', lastChecked: '16:30', staff: 'Nguyễn Thị Hoa' },
-                    { id: 2, area: 'Phòng Mổ Toà A', status: 'Processing', lastChecked: '16:45', staff: 'Lê Văn Nam' },
-                    { id: 3, area: 'Khu ICU Tầng 3', status: 'Clean', lastChecked: '16:00', staff: 'Trần Thị Mai' },
-                    { id: 4, area: 'Hành Lang Khoa Sản', status: 'Clean', lastChecked: '16:15', staff: 'Hoàng Văn Hải' },
-                    { id: 5, area: 'Khu Xét Nghiệm', status: 'Processing', lastChecked: '16:50', staff: 'Phạm Minh Tú' },
-                    { id: 6, area: 'Khu Cấp Cứu', status: 'Clean', lastChecked: '15:45', staff: 'Đặng Thu Hà' },
-                    { id: 7, area: 'Phòng Bệnh 502', status: 'Clean', lastChecked: '16:20', staff: 'Vũ Văn Long' },
-                    { id: 8, area: 'WC Công Cộng G', status: 'Processing', lastChecked: '16:55', staff: 'Bùi Thị Lan' }
-                ]
+                darkMode: localStorage.getItem('darkMode') === 'true',
+                housekeepingLogs: [],
+                lastHkUpdate: 'Đang kết nối...',
+                logs: [], // Đã xóa dữ liệu tĩnh mẫu
+                init() {
+                    if (typeof startHKFlow === 'function') {
+                        startHKFlow(this);
+                    }
+                }
             }
         }
     </script>
