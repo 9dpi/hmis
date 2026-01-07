@@ -48,8 +48,9 @@
                 trainingURL: 'https://script.google.com/macros/s/AKfycbyUSAnrbYjUJqKycGASqHcYH9TIrh3RgdBRnsXYhqvteThj6Lssm_mzV17KSbVOvBhV2Q/exec',
                 courses: [],
                 loadingTraining: false,
+                submitting: false,
                 showQuiz: false,
-                quizSession: { active: false, currentIndex: 0, correctCount: 0, questions: [] },
+                quizSession: { active: false, currentIndex: 0, correctCount: 0, questions: [], showResult: false },
 
                 async init() {
                     this.startTimer();
@@ -60,7 +61,8 @@
                     // NATIVE QR OPTIMIZATION: If URL has loc=..., handle it automatically
                     if (this.location) {
                         this.tempLocation = this.location;
-                        this.location = ''; // Reset until verified
+                        // Don't reset location yet, keep it for display but status is pending
+                        this.status = 'ĐANG XÁC THỰC...';
                         if (this.tempPin) {
                             this.pinInput = this.tempPin;
                             this.verifyPin();
@@ -115,21 +117,27 @@
 
                 startQuiz() {
                     if (this.courses.length === 0) return alert('Chưa có câu hỏi đào tạo.');
-                    this.quizSession = { active: true, currentIndex: 0, correctCount: 0, questions: [...this.courses].sort(() => 0.5 - Math.random()).slice(0, 5) };
+                    this.quizSession = {
+                        active: true,
+                        currentIndex: 0,
+                        correctCount: 0,
+                        questions: [...this.courses].sort(() => 0.5 - Math.random()).slice(0, 5),
+                        showResult: false
+                    };
                     this.showQuiz = true;
                 },
 
-                async submitAnswer(choice) {
+                submitAnswer(choice) {
                     const q = this.quizSession.questions[this.quizSession.currentIndex];
-                    if (choice === q.Correct_Answer) this.quizSession.correctCount++;
-                    else alert('⚠️ Sai rồi! Đáp án là ' + q.Correct_Answer + ': ' + (q['Explanation (Giải thích)'] || ''));
+                    if (choice === q.Correct_Answer) {
+                        this.quizSession.correctCount++;
+                    }
 
                     if (this.quizSession.currentIndex < this.quizSession.questions.length - 1) {
                         this.quizSession.currentIndex++;
                     } else {
-                        alert('🎉 Kết quả: ' + this.quizSession.correctCount + '/' + this.quizSession.questions.length);
-                        this.showQuiz = false;
-                        this.quizSession.active = false;
+                        // Show result screen instead of alert
+                        this.quizSession.showResult = true;
                     }
                 },
 
@@ -338,10 +346,12 @@
                             <button @click="submitToGAS('success')" :disabled="!canSubmit() || submitting"
                                 class="w-full py-4 rounded-2xl font-black uppercase text-xs shadow-lg transition-all flex items-center justify-center gap-2"
                                 :class="canSubmit() ? 'bg-white text-emerald-900 active:scale-95' : 'bg-emerald-800/50 text-emerald-400/50 cursor-not-allowed border border-emerald-700'">
-                                <template x-if="!submitting"><span><i class="fas fa-check-circle"></i> Gửi báo
-                                        cáo</span></template>
-                                <template x-if="submitting"><span><i class="fas fa-spinner fa-spin"></i> Đang xử
-                                        lý...</span></template>
+                                <span x-show="!submitting" class="flex items-center gap-2">
+                                    <i class="fas fa-check-circle"></i> Xác nhận hoàn thành
+                                </span>
+                                <span x-show="submitting" class="flex items-center gap-2">
+                                    <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+                                </span>
                             </button>
                             <i class="fas fa-soap absolute -right-6 -bottom-6 text-9xl text-white/5 rotate-12"></i>
                         </div>
@@ -394,18 +404,14 @@
                 <div x-show="!loadingTraining" class="space-y-4">
                     <button @click="startQuiz()"
                         class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase text-xs shadow-lg flex items-center justify-center gap-2">
-                        <i class="fas fa-play"></i> Làm bài kiểm tra định kỳ
+                        <i class="fas fa-play"></i> Bắt đầu bài kiểm tra
                     </button>
 
-                    <template x-for="course in courses" :key="course.Question_ID">
-                        <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                            <div class="flex justify-between mb-2">
-                                <span class="bg-emerald-50 text-emerald-600 text-[8px] font-black px-2 py-0.5 rounded"
-                                    x-text="course.Category"></span>
-                            </div>
-                            <h4 class="text-[13px] font-bold text-slate-800" x-text="course.Question_Text"></h4>
-                        </div>
-                    </template>
+                    <div class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm text-center">
+                        <i class="fas fa-book-reader text-3xl text-emerald-500/20 mb-3"></i>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase leading-relaxed">Bộ câu hỏi đã được
+                            tải. Hãy nhấn nút trên để bắt đầu thi sát hạch định kỳ.</p>
+                    </div>
                 </div>
             </div>
 
@@ -439,7 +445,10 @@
     <!-- Quiz Modal -->
     <div x-show="showQuiz" x-cloak
         class="fixed inset-0 z-[120] bg-black/80 flex items-center justify-center p-6 backdrop-blur-md">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+
+        <!-- Question View -->
+        <div x-show="!quizSession.showResult"
+            class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl animate-fade-in">
             <div class="mb-4 flex justify-between items-center text-[10px] font-black text-emerald-600 uppercase">
                 <span x-text="'Câu ' + (quizSession.currentIndex+1) + '/' + quizSession.questions.length"></span>
                 <span x-text="quizSession.questions[quizSession.currentIndex]?.Category"></span>
@@ -464,8 +473,29 @@
                 </button>
             </div>
             <button @click="showQuiz = false"
-                class="w-full mt-6 py-2 text-[10px] font-black text-slate-400 uppercase">Hủy
+                class="w-full mt-6 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">Hủy bài
                 thi</button>
+        </div>
+
+        <!-- Result View -->
+        <div x-show="quizSession.showResult"
+            class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl text-center animate-bounce-in">
+            <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-trophy text-4xl text-emerald-600"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 uppercase mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-xs font-bold text-slate-400 uppercase mb-6">Kết quả đạt được</p>
+
+            <div class="text-5xl font-black text-emerald-600 mb-8"
+                x-text="quizSession.correctCount + '/' + quizSession.questions.length"></div>
+
+            <p class="text-[10px] font-bold text-slate-500 mb-8 px-4 leading-relaxed">Cảm ơn bạn đã tham gia đào tạo.
+                Kết quả sẽ được ghi nhận vào hồ sơ nhân sự.</p>
+
+            <button @click="showQuiz = false"
+                class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">
+                Đóng & Quay lại
+            </button>
         </div>
     </div>
 
