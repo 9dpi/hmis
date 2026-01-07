@@ -2,7 +2,8 @@
 <html lang="vi" x-data="{ 
         section: 'overview', 
         showLayer: 'arch', 
-        darkMode: false, 
+        darkMode: localStorage.getItem('darkMode') === 'true', 
+        mobileMenu: false,
         showModal: false, 
         showAudit: false,
         selectedCriteria: 'C2.1',
@@ -17,7 +18,7 @@
             detail: 'Hệ thống phát hiện sụt giảm áp suất tại cụm vòi phun số 04. Có khả năng rò rỉ tại van chặn tầng 1.',
             action: '1. Kiểm tra trạm bơm bù áp.\n2. Kiểm tra trực tiếp van khu vực C.\n3. Thông báo đội kỹ thuật trực ca.'
         }
-    }" :class="{ 'dark': darkMode }">
+    }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
 
 <head>
     <meta charset="UTF-8">
@@ -66,52 +67,83 @@
     setInterval(() => { temp = (24 + Math.random()).toFixed(1); humid = Math.floor(50 + Math.random() * 10); aqi = Math.floor(20 + Math.random() * 10); }, 3000);
     startHKFlow($data);
 ">
+    <!-- Mobile Sidebar Overlay -->
+    <div x-show="mobileMenu" x-cloak
+        class="fixed inset-0 bg-black/60 z-[60] lg:hidden backdrop-blur-sm transition-opacity"
+        @click="mobileMenu = false" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+    </div>
+
     <div class="app-wrapper">
-        <aside class="sidebar">
-            <div class="logo-frame gap-4">
-                <div
-                    class="bg-teal-600 w-[56px] h-[56px] flex items-center justify-center rounded-xl shadow-lg text-white text-2xl">
-                    <i class="fas fa-hospital-user"></i>
+        <aside class="sidebar" :class="{ 'mobile-open': mobileMenu }">
+            <div class="logo-frame flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="bg-teal-600 w-12 h-12 flex items-center justify-center rounded-xl shadow-lg text-white text-xl">
+                        <i class="fas fa-hospital-user"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-black tracking-tighter uppercase leading-none"
+                            :class="darkMode ? 'text-white' : 'text-teal-900'">SCP HMIS</h1>
+                        <p class="text-[9px] opacity-60 uppercase tracking-widest mt-1 font-bold text-teal-600">Medical
+                            Center</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tighter uppercase leading-none"
-                        :class="darkMode ? 'text-white' : 'text-teal-900'">SCP HMIS</h1>
-                    <p class="text-[9px] opacity-60 uppercase tracking-widest mt-1 font-bold text-teal-600">Medical
-                        Center</p>
-                </div>
+                <button @click="mobileMenu = false" class="lg:hidden p-2 text-slate-400 hover:text-teal-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
 
-            <nav class="flex-grow py-4 overflow-y-auto">
-                <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống quản trị
+            <nav class="flex-grow py-4 overflow-y-auto custom-scroll">
+                <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Điều hướng</div>
+                <a href="https://9dpi.github.io/scp/" class="nav-link flex items-center px-6 py-3 no-underline">
+                    <i class="fas fa-home mr-3 w-5 text-lg text-blue-500"></i> Hub Trung tâm (SCP Hub)
+                </a>
+
+                <div class="px-6 mt-4 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống quản
+                    trị</div>
+                <div @click="section = 'overview'; showAudit = false; mobileMenu = false"
+                    :class="section === 'overview' ? 'active' : ''"
+                    class="nav-link flex items-center px-6 py-4 cursor-pointer">
+                    <i class="fas fa-chart-line mr-3 w-5 text-lg"></i> Quản lý bệnh viện
                 </div>
-                <div @click="section = 'overview'; showAudit = false" :class="section === 'overview' ? 'active' : ''"
-                    class="nav-link flex items-center px-6 py-4"><i class="fas fa-chart-line mr-3 w-5 text-lg"></i> Quản
-                    lý bệnh viện</div>
-                <div @click="section = 'facility'; showAudit = false"
-                    :class="section === 'facility' && !showAudit ? 'active' : ''"
-                    class="nav-link flex items-center px-6 py-4"><i
-                        class="fas fa-layer-group mr-3 w-5 text-lg text-orange-500"></i> Quản lý Cơ sở vật chất <span
-                        class="ml-auto bg-orange-500 text-[8px] text-white px-1.5 py-0.5 rounded-full font-bold">3D
-                        LAB</span></div>
-                <div @click="section = 'facility'; showAudit = true; showLayer = 'fire'"
-                    :class="showAudit ? 'active' : ''" class="nav-link flex items-center px-6 py-4"><i
-                        class="fas fa-clipboard-check mr-3 w-5 text-lg text-teal-500"></i> 83 Tiêu chí Chất lượng</div>
-                <a href="show-app.html" target="_blank" class="nav-link flex items-center px-6 py-4 no-underline"><i
-                        class="fas fa-notes-medical mr-3 w-5 text-lg"></i> Ứng dụng Mobile App</a>
+                <a href="desktop/facility.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-layer-group mr-3 w-5 text-lg text-orange-500"></i> Quản lý Cơ sở vật chất
+                    <span class="ml-auto bg-orange-500 text-[8px] text-white px-1.5 py-0.5 rounded-full font-bold">3D
+                        LAB</span>
+                </a>
+                <a href="desktop/audit.html" class="nav-link flex items-center px-6 py-4">
+                    <i class="fas fa-clipboard-check mr-3 w-5 text-lg text-teal-500"></i> 83 Tiêu chí Chất lượng
+                </a>
+                <a href="show-app.html" target="_blank" class="nav-link flex items-center px-6 py-4 no-underline">
+                    <i class="fas fa-mobile-alt mr-3 w-5 text-lg"></i> Ứng dụng Mobile App
+                </a>
+
                 <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Khu vực
                     chuyên môn</div>
-                <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-user-injured mr-3 w-5"></i> Danh sách
-                    bệnh nhân</div>
-                <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-procedures mr-3 w-5"></i> Sơ đồ
-                    giường bệnh</div>
-                <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-microscope mr-3 w-5"></i> Xét nghiệm
-                    & CĐHA</div>
+                <a href="desktop/patients.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-user-injured mr-3 w-5"></i> Danh sách bệnh nhân
+                </a>
+                <a href="desktop/bed-map.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-procedures mr-3 w-5"></i> Sơ đồ giường bệnh
+                </a>
+                <a href="desktop/lab-tests.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-microscope mr-3 w-5"></i> Xét nghiệm & CĐHA
+                </a>
+
                 <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vận hành &
                     Hậu cần</div>
-                <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-pills mr-3 w-5"></i> Quản lý kho dược
-                </div>
-                <div class="nav-link flex items-center px-6 py-3"><i class="fas fa-file-invoice-dollar mr-3 w-5"></i>
-                    Viện phí & BHYT</div>
+                <a href="desktop/pharmacy.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-pills mr-3 w-5"></i> Quản lý kho dược
+                </a>
+                <a href="desktop/billing.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-file-invoice-dollar mr-3 w-5"></i> Viện phí & BHYT
+                </a>
+                <a href="desktop/housekeeping.html" class="nav-link flex items-center px-6 py-3">
+                    <i class="fas fa-broom mr-3 w-5"></i> Vệ sinh
+                </a>
             </nav>
 
             <div class="p-6 border-t flex items-center justify-between transition-colors"
@@ -128,11 +160,17 @@
 
         <div class="main-container">
             <header class="main-header shadow-sm">
-                <div>
-                    <h2 class="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Cơ sở: Bệnh viện Quốc tế
-                        SCP</h2>
-                    <h3 class="text-2xl font-black uppercase tracking-tight transition-colors"
-                        :class="darkMode ? 'text-white' : 'text-slate-800'">TRUNG TÂM ĐIỀU HÀNH HMIS</h3>
+                <div class="flex items-center gap-4">
+                    <button @click="mobileMenu = true"
+                        class="lg:hidden p-2 text-slate-500 hover:text-teal-600 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Cơ sở: Bệnh viện Quốc
+                            tế SCP</h2>
+                        <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight transition-colors"
+                            :class="darkMode ? 'text-white' : 'text-slate-800'">TRUNG TÂM ĐIỀU HÀNH HMIS</h3>
+                    </div>
                 </div>
                 <div class="text-right">
                     <p class="text-[9px] opacity-50 uppercase font-bold transition-colors"
@@ -234,22 +272,35 @@
                                     <div class="status-dot !bg-emerald-500"></div>
                                 </span>
                             </h4>
-                            <div class="flex-grow overflow-y-auto space-y-2 pr-1 custom-scroll"
+                            <div class="flex-grow overflow-y-auto space-y-3 pr-1 custom-scroll"
                                 style="max-height: 260px;">
-                                <template x-for="log in housekeepingLogs">
-                                    <div
-                                        class="p-3 rounded-xl border border-emerald-500/20 bg-white/50 dark:bg-slate-800/50 shadow-sm transition-all hover:border-emerald-500/50">
-                                        <div class="flex justify-between items-start mb-1.5"><span
-                                                class="text-[11px] font-black text-slate-800 dark:text-white"
-                                                x-text="log.loc"></span><span
-                                                class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase"
-                                                x-text="log.status"></span></div>
-                                        <div
-                                            class="flex justify-between text-[9px] font-semibold text-slate-500 uppercase tracking-tight">
-                                            <span><i class="fas fa-user text-[8px] mr-1"></i> <span
-                                                    x-text="log.staff"></span></span><span><i
-                                                    class="far fa-clock text-[8px] mr-1"></i> <span
-                                                    x-text="log.time"></span></span>
+                                <template x-for="log in housekeepingLogs" :key="log.time + log.staff">
+                                    <div class="p-3 rounded-xl border border-emerald-500/20 bg-white/50 dark:bg-slate-800/50 shadow-sm transition-all hover:border-emerald-500/50 flex gap-3 cursor-pointer"
+                                        @click="if(log.photo) window.open(log.photo, '_blank')">
+
+                                        <!-- Thumbnail -->
+                                        <div class="w-14 h-14 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
+                                            <img :src="log.photo || 'assets/images/no-photo.jpg'"
+                                                class="w-full h-full object-cover">
+                                        </div>
+
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-start mb-1">
+                                                <span class="text-[11px] font-black text-slate-800 dark:text-white"
+                                                    x-text="log.loc"></span>
+                                                <span
+                                                    class="text-[7px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase"
+                                                    x-text="log.status"></span>
+                                            </div>
+                                            <div
+                                                class="flex justify-between text-[8px] font-semibold text-slate-500 uppercase tracking-tight">
+                                                <span><i class="fas fa-user text-[7px] mr-1"></i> <span
+                                                        x-text="log.staff"></span></span>
+                                                <span><i class="far fa-clock text-[7px] mr-1"></i> <span
+                                                        x-text="log.time"></span></span>
+                                            </div>
+                                            <div class="text-[8px] mt-1 italic text-slate-400 line-clamp-1"
+                                                x-text="log.note"></div>
                                         </div>
                                     </div>
                                 </template>

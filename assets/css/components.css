@@ -11,7 +11,21 @@
     flex-direction: column;
     z-index: 50;
     border-right-width: 1px;
-    transition: 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        position: fixed;
+        left: -18rem;
+        top: 0;
+        bottom: 0;
+        z-index: 70;
+    }
+    .sidebar.mobile-open {
+        left: 0;
+        box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+    }
 }
 
 .dark .sidebar {
