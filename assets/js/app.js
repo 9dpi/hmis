@@ -26,36 +26,7 @@ function initPanZoom() {
 /**
  * Simulate real-time Housekeeping updates
  */
-function startHKFlow(appData) {
-    if (!window.HMISData) return;
-
-    // Initial load
-    appData.housekeepingLogs = window.HMISData.getHousekeeping();
-    appData.lastHkUpdate = new Date().toLocaleTimeString();
-
-    // Simulation interval
-    setInterval(() => {
-        const locations = ['Sảnh chính', 'Phòng Cấp cứu', 'Khu xét nghiệm', 'Phòng Mổ 01', 'Căng tin', 'Tầng 3 - Nội'];
-        const statuses = ['Sạch', 'Đang dọn', 'Cần dọn', 'Đã khử khuẩn'];
-        const staff = ['Lê Thị E', 'Nguyễn Văn G', 'Trần Thị H', 'Phạm Minh K'];
-
-        const newLog = {
-            loc: locations[Math.floor(Math.random() * locations.length)],
-            status: statuses[Math.floor(Math.random() * statuses.length)],
-            staff: staff[Math.floor(Math.random() * staff.length)],
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-
-        appData.housekeepingLogs.unshift(newLog);
-        if (appData.housekeepingLogs.length > 8) appData.housekeepingLogs.pop();
-        appData.lastHkUpdate = new Date().toLocaleTimeString();
-
-        // Update stats if needed
-        if (appData.stats && window.HMISData) {
-            appData.stats = window.HMISData.getStats();
-        }
-    }, 5000);
-}
+// startHKFlow removed to avoid conflict with data-service.js
 
 /**
  * Initialize all application components
@@ -83,4 +54,4 @@ window.addEventListener('load', initApp);
 
 // Export for use in other modules
 window.initApp = initApp;
-window.startHKFlow = startHKFlow;
+// window.startHKFlow = startHKFlow;
