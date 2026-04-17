@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposal HMIS - Đề Xuất Hợp Tác Đầu Tư Hệ Điều Hành Y Tế Doanh Nghiệp</title>
+    <title>HMIS Proposal - Đề xuất giải pháp Y tế số</title>
     
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Phông chữ Tiếng Việt chuẩn -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- TailwindCSS -->
@@ -16,16 +16,11 @@
             theme: {
                 extend: {
                     fontFamily: { 
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif']
+                        sans: ['Be Vietnam Pro', 'system-ui', '-apple-system', 'sans-serif'],
                     },
                     colors: {
                         medical: {
-                            50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a',
-                        },
-                        brand: {
-                            gold: '#fbbf24',
-                            deep: '#0f172a'
+                            50: '#f0fdf9', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 900: '#134e4a',
                         }
                     }
                 }
@@ -34,242 +29,218 @@
     </script>
 
     <style>
-        body { background-color: #ffffff; color: #334155; scroll-behavior: smooth; }
-        .proposal-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.5); shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .ip-badge { background: linear-gradient(90deg, #14b8a6 0%, #0d9488 100%); color: white; }
-        .section-tag { font-family: 'Outfit', sans-serif; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #14b8a6; font-size: 0.75rem; border-left: 3px solid #14b8a6; padding-left: 0.75rem; margin-bottom: 1rem; display: block; }
-        .btn-premium { background: linear-gradient(90deg, #14b8a6 0%, #0d9488 100%); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 0 0 #0f766e; }
-        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 6px 0 0 #0f766e; }
-        .btn-premium:active { transform: translateY(2px); box-shadow: 0 0px 0 0 #0f766e; }
-        @media print { .no-print { display: none; } body { background: white; } .print-shadow-none { box-shadow: none !important; border: 1px solid #eee; } }
+        body { 
+            background-color: #ffffff; 
+            color: #1e293b; 
+            scroll-behavior: smooth;
+            font-feature-settings: "cv03", "cv04", "cv11";
+        }
+        .section-box {
+            border: 1px solid #f1f5f9;
+            border-radius: 1.5rem;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .section-box:hover {
+            border-color: #14b8a6;
+            box-shadow: 0 10px 30px -10px rgba(20, 184, 166, 0.1);
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #14b8a6;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+        }
+        .ip-value-card {
+            background: #f0fdf9;
+            border: 2px dashed #14b8a6;
+            border-radius: 2rem;
+        }
+        h1, h2, h3, h4 {
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+        p {
+            line-height: 1.8;
+        }
+        @media print {
+            .no-print { display: none; }
+            body { font-size: 12pt; }
+            .section-box { border: 1px solid #ddd; break-inside: avoid; }
+        }
     </style>
 </head>
-<body class="font-sans leading-relaxed">
+<body class="font-sans">
 
-    <!-- Header Overlay -->
-    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-slate-100 no-print">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 no-print">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-medical-600 rounded flex items-center justify-center text-white shadow-lg">
-                    <i class="fas fa-file-contract text-sm"></i>
+                <div class="w-10 h-10 bg-medical-600 rounded-xl flex items-center justify-center text-white">
+                    <i class="fas fa-file-contract"></i>
                 </div>
-                <span class="text-lg font-display font-black tracking-tighter text-slate-900 uppercase">HMIS Proposal</span>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900 block uppercase">HMIS PROPOSAL</span>
+                    <span class="text-[10px] font-bold text-medical-600 uppercase tracking-widest">Đề xuất hợp tác đầu tư</span>
+                </div>
             </div>
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden md:block">Bảo mật nội bộ</span>
-                <button onclick="window.print()" class="text-xs font-bold text-slate-600 hover:text-medical-600 flex items-center gap-2">
-                    <i class="fas fa-print"></i> PDF
+            <div class="flex items-center gap-6">
+                <button onclick="window.print()" class="text-sm font-bold text-slate-500 hover:text-medical-600 flex items-center gap-2 transition-colors">
+                    <i class="fas fa-file-pdf"></i> Xuất trình bản in
                 </button>
-                <a href="mailto:contact@scp.vn" class="btn-premium text-white px-5 py-2 rounded font-bold text-xs uppercase tracking-widest">Liên hệ hợp tác</a>
+                <a href="mailto:contact@scp.vn" class="bg-medical-600 hover:bg-medical-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-medical-500/20 uppercase tracking-widest">
+                    Hợp tác ngay
+                </a>
             </div>
         </div>
     </header>
 
-    <main class="pt-16">
+    <main class="max-w-5xl mx-auto px-6 py-16 space-y-24">
+        
         <!-- Hero Section -->
-        <section class="proposal-gradient text-white pt-24 pb-32 px-6 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
-                <i class="fas fa-hospital-user text-[400px] -mr-20 mt-20 rotate-12"></i>
+        <section class="space-y-8 text-center py-12">
+            <div class="inline-block bg-medical-50 text-medical-600 text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-medical-100">
+                Enterprise Healthcare OS
             </div>
-            <div class="max-w-4xl mx-auto relative z-10 space-y-8">
-                <div class="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
-                    <span class="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">Đề xuất Đối tác Chiến lược</span>
-                </div>
-                <h1 class="text-5xl md:text-7xl font-display font-black leading-[1.1] tracking-tight">
-                    Hệ Điều Hành <br><span class="text-medical-500">Y Tế Doanh Nghiệp</span>
-                </h1>
-                <p class="text-xl text-slate-300 max-w-2xl font-light leading-relaxed">
-                    Nền tảng HMIS DNA tích hợp - Giải pháp quản lý y tế quy mô lớn, tuân thủ pháp lý và sẵn sàng cho kỷ nguyên số y tế tại Việt Nam.
-                </p>
-                <div class="pt-4 flex flex-wrap gap-8 text-sm font-bold opacity-80 uppercase tracking-widest">
-                    <div class="flex items-center gap-2 font-display uppercase"><i class="fas fa-balance-scale text-medical-500"></i> Compliance 2026</div>
-                    <div class="flex items-center gap-2 font-display uppercase"><i class="fas fa-users-gear text-medical-500"></i> Multi-tenant</div>
-                    <div class="flex items-center gap-2 font-display uppercase"><i class="fas fa-microchip text-medical-500"></i> AI Ready</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- IP Value Block (Floating) -->
-        <section class="max-w-4xl mx-auto px-6 -mt-16">
-            <div class="glass-card rounded-[2rem] p-10 shadow-2xl relative border-teal-100 flex flex-col md:flex-row items-center gap-10">
-                <div class="flex-grow space-y-4">
-                    <span class="section-tag italic">Giá trị tài sản trí tuệ (IP)</span>
-                    <h2 class="text-3xl font-display font-bold text-slate-900 leading-tight italic">
-                        Chúng tôi đề xuất góp vốn bằng <br><span class="text-medical-600 underline decoration-brand-gold decoration-4 underline-offset-8 font-black">Nền tảng sẵn có trị giá 2,2 Tỷ VNĐ</span>
-                    </h2>
-                    <p class="text-slate-500 text-sm italic">
-                        Giá trị dựa trên chi phí phát triển thực tế, giá trị kiến trúc HMIS DNA V15 và quyền sở hữu repository hiện tại.
-                    </p>
-                </div>
-                <div class="flex-shrink-0 text-center space-y-2">
-                    <div class="w-32 h-32 rounded-full border-[6px] border-medical-500 flex flex-col items-center justify-center bg-medical-50 shadow-inner">
-                        <span class="text-xs font-black text-medical-600 uppercase">Ước tính IP</span>
-                        <span class="text-2xl font-black text-slate-900">~2,2B</span>
-                        <span class="text-[10px] font-bold text-slate-500">VNĐ</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Content Sections -->
-        <div class="max-w-4xl mx-auto px-6 py-24 space-y-32">
-            
-            <!-- 1. Giới thiệu -->
-            <section class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
-                <div class="md:col-span-4 sticky top-24">
-                    <span class="section-tag">01. Giới thiệu</span>
-                    <h3 class="text-2xl font-display font-black text-slate-900 leading-tight italic uppercase">Hơn cả một phần mềm quản lý</h3>
-                </div>
-                <div class="md:col-span-8 space-y-6">
-                    <p class="text-lg text-slate-600">
-                        HMIS DNA là một hệ thống <strong>Multi-tenant</strong> được thiết kế theo cấu trúc hình tháp, cho phép các tập đoàn, cơ quan quản lý giám sát dữ liệu từ cấp trung ương xuống từng trạm y tế vùng sâu.
-                    </p>
-                    <div class="p-6 bg-slate-50 rounded-2xl border-l-4 border-medical-600 italic text-slate-700">
-                        "Mục tiêu là trở thành một Hệ điều hành (Operating System) cho ngành y tế, nơi mọi quy trình KCB, HSBAĐT và thanh quyết toán được tự động hóa hoàn toàn."
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 pt-4 font-bold text-[11px] uppercase tracking-widest text-slate-400">
-                        <div class="flex items-center gap-2"><i class="fas fa-check-circle text-medical-500"></i> HSBAĐT Thông tư 13/2025</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check-circle text-medical-500"></i> Kết nối VNeID & National Gateway</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check-circle text-medical-500"></i> Nghị định 13 (Data Privacy)</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check-circle text-medical-500"></i> Ký số điện tử CA</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. Giá trị IP -->
-            <section class="bg-medical-50/50 rounded-[3rem] p-12 space-y-12">
-                <div class="text-center space-y-4 max-w-2xl mx-auto">
-                    <span class="section-tag mx-auto inline-block border-none p-0 tracking-[0.2em]">02. Nền tảng IP hiện hữu</span>
-                    <h3 class="text-3xl font-display font-black text-slate-900 uppercase">Tài sản trí tuệ đã đầu tư</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                        <i class="fas fa-sitemap text-3xl text-medical-600 mb-6 group-hover:scale-110 transition-transform"></i>
-                        <h4 class="font-black text-slate-900 mb-2 uppercase text-sm">Kiến trúc V15</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed italic">Chi tiết cấu trúc Hybrid (Java + Python), Compliance Matrix 2026 và chiến lược Scale 400 sites.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                        <i class="fas fa-code text-3xl text-medical-600 mb-6 group-hover:scale-110 transition-transform"></i>
-                        <h4 class="font-black text-slate-900 mb-2 uppercase text-sm">Prototype Thực tế</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed italic">UI Cross-platform hoàn thiện, Repository nội bộ với tiến độ commit liên tục (20+ gần nhất).</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                        <i class="fas fa-layer-group text-3xl text-medical-600 mb-6 group-hover:scale-110 transition-transform"></i>
-                        <h4 class="font-black text-slate-900 mb-2 uppercase text-sm">Modular Stack</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed italic">Đáp ứng offline-first, đồng bộ hàng đợi (Sync Queue) – yếu tố then chốt tại VN.</p>
-                    </div>
-                </div>
-                <p class="text-center text-sm font-bold text-medical-700 italic bg-medical-100/50 py-3 rounded-full border border-medical-200">
-                    "Giúp rút ngắn 6-9 tháng thời gian R&D và giảm chi phí đầu tư ban đầu từ con số không."
-                </p>
-            </section>
-
-            <!-- 3. Kế hoạch & Ngân sách -->
-            <section class="space-y-12">
-                <div class="flex items-end justify-between border-b pb-6 border-slate-100">
-                    <div class="space-y-2">
-                        <span class="section-tag">03. Kế hoạch Phát triển</span>
-                        <h3 class="text-3xl font-display font-black text-slate-900 italic uppercase">Lộ trình 21 tháng</h3>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="md:w-1/3 p-6 bg-slate-900 rounded-2xl text-white">
-                            <span class="text-xs font-bold text-teal-400 uppercase tracking-widest">Phase 1 (6 Tháng)</span>
-                            <h4 class="text-xl font-bold mt-2">Core & Compliance</h4>
-                            <p class="text-xs text-slate-400 mt-4 leading-relaxed italic">Hoàn thiện 10 site pilot, tích hợp VNeID, Ký số CA và HSBAĐT.</p>
-                        </div>
-                        <div class="md:w-2/3 p-6 bg-white border border-slate-200 rounded-2xl flex flex-col justify-center">
-                            <div class="grid grid-cols-2 gap-8">
-                                <div>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase">Phase 2 & 3</span>
-                                    <h5 class="text-lg font-bold text-slate-900 italic">Mở rộng 400 site</h5>
-                                    <p class="text-xs text-slate-500 mt-1 italic">Tích hợp AI chẩn đoán, Analytics & Billing.</p>
-                                </div>
-                                <div class="border-l pl-8 border-slate-100">
-                                    <span class="text-[10px] font-black text-slate-400 uppercase">Dự toán Ngân sách</span>
-                                    <h5 class="text-xl font-black text-medical-600 italic">~18,58 Tỷ VNĐ</h5>
-                                    <p class="text-xs text-slate-500 mt-1 italic">Huy động vốn kết hợp (Cash + IP).</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-teal-50 border border-teal-100 rounded-xl text-center text-xs text-medical-800 font-bold italic">
-                        Chi phí vận hành sau triển khai ước tính: ~246 Triệu VNĐ/tháng cho 400 Sites (Hạ tầng).
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. Lợi ích & Đề xuất -->
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="p-10 bg-slate-900 rounded-[2.5rem] text-white space-y-8">
-                    <span class="section-tag !border-white text-white">04. Lợi ích hợp tác</span>
-                    <ul class="space-y-6">
-                        <li class="flex gap-4">
-                            <i class="fas fa-bolt text-teal-400 mt-1"></i>
-                            <div>
-                                <h5 class="font-bold uppercase text-sm italic">Tiết kiệm thời gian</h5>
-                                <p class="text-xs text-slate-400 italic">Nền tảng sẵn có giúp đi thẳng vào triển khai Pilot.</p>
-                            </div>
-                        </li>
-                        <li class="flex gap-4">
-                            <i class="fas fa-shield-halved text-teal-400 mt-1"></i>
-                            <div>
-                                <h5 class="font-bold uppercase text-sm italic">Giảm rủi ro Pháp lý</h5>
-                                <p class="text-xs text-slate-400 italic">Ma trận tuân thủ (Compliance) đã được thiết kế sẵn cho 2026.</p>
-                            </div>
-                        </li>
-                        <li class="flex gap-4">
-                            <i class="fas fa-chart-line text-teal-400 mt-1"></i>
-                            <div>
-                                <h5 class="font-bold uppercase text-sm italic">Tiềm năng bùng nổ</h5>
-                                <p class="text-xs text-slate-400 italic">Hệ sinh thái y tế số hiện đại nhất phục vụ công & tư.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="p-10 border-2 border-slate-100 rounded-[2.5rem] bg-white space-y-8">
-                    <span class="section-tag">05. Đề nghị Góp vốn</span>
-                    <p class="text-slate-600 italic text-sm">
-                        Ưu tiên hình thức góp vốn bằng <strong>Tài sản trí tuệ (IP Contribution)</strong> kết hợp vốn tiền mặt từ Quý đối tác.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
-                            <div class="w-10 h-10 rounded-lg bg-medical-50 text-medical-600 flex items-center justify-center font-bold">1</div>
-                            <span class="text-sm font-bold text-slate-800">Quyền truy cập toàn bộ Repository & DNA V15</span>
-                        </div>
-                        <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
-                            <div class="w-10 h-10 rounded-lg bg-medical-50 text-medical-600 flex items-center justify-center font-bold">2</div>
-                            <span class="text-sm font-bold text-slate-800">Demo chuyên sâu Prototype hiện tại</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-lg bg-medical-50 text-medical-600 flex items-center justify-center font-bold">3</div>
-                            <span class="text-sm font-bold text-slate-800">Thảo luận tỷ lệ cổ phần & lộ trình huy động</span>
-                        </div>
-                    </div>
-                    <button class="w-full btn-premium text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm italic">Thiết lập cuộc họp thảo luận</button>
-                </div>
-            </section>
-        </div>
-
-        <!-- Final Call to Action -->
-        <section class="bg-slate-50 py-24 text-center px-6">
-            <h2 class="text-3xl font-display font-black text-slate-900 uppercase italic">Kiến tạo tương lai y tế số</h2>
-            <p class="text-slate-500 mt-4 max-w-xl mx-auto italic">
-                Chúng tôi tin rằng với nền tảng IP vững chắc và sự cộng hưởng từ Quý đối tác, HMIS DNA sẽ thay đổi bộ mặt quản lý y tế tại Việt Nam.
+            <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1]">
+                Dự án <span class="text-medical-600">HMIS DNA</span>
+            </h1>
+            <p class="text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed italic font-medium">
+                Kiến tạo hệ điều hành số cho ngành y tế – Tối ưu vận hành, tuân thủ pháp lý và sẵn sàng mở rộng.
             </p>
         </section>
 
-        <!-- Footer -->
-        <footer class="py-12 border-t border-slate-100 text-center space-y-6 px-6">
-            <div class="flex justify-center gap-8 text-xl text-slate-300">
-                <i class="fab fa-github hover:text-medical-600 transition-colors cursor-pointer"></i>
-                <i class="fab fa-linkedin hover:text-medical-600 transition-colors cursor-pointer"></i>
-                <i class="fas fa-envelope hover:text-medical-600 transition-colors cursor-pointer"></i>
+        <!-- Giá trị IP (Phần quan trọng nhất - Cần rõ ràng) -->
+        <section class="ip-value-card p-10 md:p-16 flex flex-col md:flex-row items-center gap-12">
+            <div class="flex-grow space-y-6 text-center md:text-left">
+                <h2 class="text-3xl font-black text-slate-900 uppercase italic">Tài sản trí tuệ sẵn có (IP)</h2>
+                <div class="h-1 w-20 bg-medical-600 mx-auto md:mx-0"></div>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    Chúng tôi đề xuất góp vốn ban đầu bằng toàn bộ <strong>Tài sản trí tuệ (IP)</strong> đã được đầu tư và hoàn thiện, giúp dự án tiết kiệm 9 tháng R&D và hàng tỷ đồng chi phí cơ hội.
+                </p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-bold uppercase tracking-widest">
+                    <span class="bg-white px-4 py-2 rounded-lg border border-slate-200">Kiến trúc DNA V15</span>
+                    <span class="bg-white px-4 py-2 rounded-lg border border-slate-200">Repository Code base</span>
+                    <span class="bg-white px-4 py-2 rounded-lg border border-slate-200">Compliance Matrix</span>
+                </div>
             </div>
-            <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em]">© 2026 HMIS Enterprise DNA | SCP Digital Health</p>
+            <div class="flex-shrink-0 bg-white p-8 rounded-3xl shadow-xl border border-medical-100 text-center space-y-2 w-full md:w-64">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Giá trị định giá</span>
+                <div class="text-4xl font-black text-medical-600">2,2 Tỷ</div>
+                <div class="text-xs font-bold text-slate-900 italic uppercase">Việt Nam Đồng</div>
+            </div>
+        </section>
+
+        <!-- 1. Giới thiệu -->
+        <section class="space-y-12">
+            <div class="flex items-center gap-4">
+                <div class="h-8 w-1.5 bg-medical-600"></div>
+                <h2 class="text-3xl font-black text-slate-900 uppercase">Hợp tác & Phát triển</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="section-box p-8 space-y-4">
+                    <h4 class="text-xl font-bold flex items-center gap-3">
+                        <i class="fas fa-bullseye text-medical-600"></i> Tầm nhìn Dự án
+                    </h4>
+                    <p class="text-slate-600 text-sm">
+                        HMIS DNA là hệ sinh thái quản lý y tế tích hợp (Multi-tenant), hỗ trợ từ Trung ương đến từng Trạm Y tế xã, phường.
+                    </p>
+                </div>
+                <div class="section-box p-8 space-y-4">
+                    <h4 class="text-xl font-bold flex items-center gap-3">
+                        <i class="fas fa-shield-check text-medical-600"></i> Tuân thủ Pháp lý
+                    </h4>
+                    <p class="text-slate-600 text-sm">
+                        Đáp ứng đầy đủ Nghị định 13/2023, Thông tư 13/2025 (HSBAĐT), Thông tư 38/2024 (Cổng dữ liệu quốc gia).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Kế hoạch & Lợi ích -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                <h3 class="text-2xl font-black text-slate-900 border-b pb-4 border-slate-100 uppercase italic">Lộ trình 21 tháng</h3>
+                <div class="space-y-6">
+                    <div class="flex gap-6 items-start">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h5 class="font-bold text-slate-900">Phase 1 (6 Tháng đầu)</h5>
+                            <p class="text-sm text-slate-500 mt-1 italic">Hoàn thiện Core, HSBAĐT & Ký số cho 10 site Pilot đầu tiên.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 items-start">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h5 class="font-bold text-slate-900">Phase 2 & 3 (15 Tháng tiếp theo)</h5>
+                            <p class="text-sm text-slate-500 mt-1 italic">Mở rộng lên 400 Sites, tích hợp AI chẩn đoán, Analytics & Quản trị kho dược tầng cao.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-900 rounded-2xl p-8 text-white flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Tổng ngân sách triển khai</span>
+                        <div class="text-3xl font-black">~18,58 Tỷ <span class="text-sm font-normal text-slate-400">VNĐ</span></div>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Chi phí vận hành/tháng</span>
+                        <div class="text-xl font-bold text-teal-400 italic">~246 Triệu <span class="text-xs text-white">/ 400 sites</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-slate-50 rounded-[2rem] p-8 space-y-6 shadow-inner border border-slate-100">
+                <h3 class="text-xl font-black text-slate-900 uppercase italic">Lợi ích cộng hưởng</h3>
+                <ul class="space-y-6">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-medical-600 mt-1"></i>
+                        <p class="text-sm font-medium text-slate-700">Tận dụng nền tảng IP sẵn có để chiếm lĩnh thị trường nhanh hơn.</p>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-medical-600 mt-1"></i>
+                        <p class="text-sm font-medium text-slate-700">Giảm thiểu rủi ro kỹ thuật và pháp lý ngay từ giai đoạn đầu.</p>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-check-circle text-medical-600 mt-1"></i>
+                        <p class="text-sm font-medium text-slate-700">Giá trị thương mại bền vững với mô hình vận hành hiện đại.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 5. Đề nghị Hợp tác -->
+        <section class="section-box p-12 text-center space-y-8 bg-medical-50/20 border-medical-100">
+            <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tight italic">Đề nghị hợp tác đầu tư</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto italic font-medium">
+                Chúng tôi đề xuất hình thức <strong>Góp vốn bằng tài sản trí tuệ (IP Contribution)</strong> kết hợp với nguồn vốn tài chính từ Quý đối tác để cùng sở hữu và vận hành hệ sinh thái HMIS DNA.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 pt-4">
+                <div class="flex items-center gap-3 text-sm font-bold bg-white px-6 py-3 rounded-xl shadow-sm border border-slate-100">
+                    <i class="fas fa-key text-medical-600"></i> Quyền truy cập Code
+                </div>
+                <div class="flex items-center gap-3 text-sm font-bold bg-white px-6 py-3 rounded-xl shadow-sm border border-slate-100">
+                    <i class="fas fa-desktop text-medical-600"></i> Demo Prototype
+                </div>
+                <div class="flex items-center gap-3 text-sm font-bold bg-white px-6 py-3 rounded-xl shadow-sm border border-slate-100">
+                    <i class="fas fa-handshake text-medical-600"></i> Thảo luận Cổ phần
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pt-16 border-t border-slate-100 text-center space-y-6 italic">
+            <p class="text-slate-500 font-medium">
+                Rất mong sớm có cơ hội được trình bày chi tiết và thảo luận cùng Quý đối tác.
+            </p>
+            <div class="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em] pt-8">
+                © 2026 HMIS Enterprise DNA | SCP Digital Health
+            </div>
         </footer>
     </main>
 
