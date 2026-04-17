@@ -1,5 +1,5 @@
-🧬 HMIS DNA V12 – Enterprise Scale (400+ Sites)
-(Cập nhật compliance & roadmap – Tháng 4/2026)
+🧬 HMIS DNA V 1.2 – Enterprise Scale (400+ Sites)
+(Cập nhật compliance, roadmap & ngân sách chi tiết – Tháng 4/2026)
 
 1. Chiến lược đa đối tượng & đa cấp (Multi-tenant Architecture)
 
@@ -81,16 +81,37 @@ Bảo mật: Mã hóa AES-256-GCM, Audit Trail immutable, SIEM tích hợp Kafka
 - Tổng hạ tầng Cloud cho 400 site: ~246.000.000 VNĐ/tháng.
 - Tiết kiệm 84% so với việc dùng Cloud quốc tế (AWS/Azure/GCP).
 
-8. Đội ngũ dự án (TEAM)
+8. Ngân sách dự án (Budget Breakdown)
+
+Tổng ngân sách ước tính cho giai đoạn triển khai ban đầu (18 tháng – Phase 1 + Phase 2):
+
+| Hạng mục                              | Phase 1 (6 tháng)     | Phase 2 (6 tháng)     | Phase 3 (6 tháng)     | Tổng (18 tháng)       |
+|---------------------------------------|-----------------------|-----------------------|-----------------------|-----------------------|
+| Nhân sự (Team + Tư vấn pháp lý/DPO)  | 1.800.000.000        | 1.500.000.000        | 1.200.000.000        | 4.500.000.000        |
+| Phát triển Core Platform & Compliance (HSBAĐT, ký số, VNeID, National Gateway) | 2.200.000.000        | 800.000.000          | 400.000.000          | 3.400.000.000        |
+| Phát triển Feature Modules (AI, IoT, Analytics) | 900.000.000          | 1.100.000.000        | 700.000.000          | 2.700.000.000        |
+| Hạ tầng Cloud & License (Viettel/VNPT) | 600.000.000          | 900.000.000          | 1.200.000.000        | 2.700.000.000        |
+| Thiết bị pilot & Training (10 sites) | 400.000.000          | 300.000.000          | 200.000.000          | 900.000.000          |
+| Tư vấn pháp lý, Audit & Compliance    | 300.000.000          | 200.000.000          | 150.000.000          | 650.000.000          |
+| Dự phòng (10%)                        | 620.000.000          | 480.000.000          | 385.000.000          | 1.485.000.000        |
+| **Tổng theo Phase**                   | **6.820.000.000**    | **5.280.000.000**    | **4.235.000.000**    | **16.335.000.000**   |
+
+**Ghi chú ngân sách:**
+- Tổng ngân sách triển khai ban đầu (18 tháng): **~16,335 tỷ VNĐ**.
+- Phase 1 (6 tháng) tập trung mạnh vào compliance và core platform (~6,82 tỷ) để đảm bảo đáp ứng deadline HSBAĐT 30/09/2025.
+- Chi phí nhân sự bao gồm 9 nhân sự nòng cốt + tư vấn pháp lý y tế/DPO.
+- Sau 18 tháng, chuyển sang chi phí vận hành hàng tháng (~246 triệu VNĐ/tháng cho hạ tầng + bảo trì).
+
+9. Đội ngũ dự án (TEAM)
 - Central Team: 9 nhân sự nòng cốt (PM, Kiến trúc sư, Fullstack dev, DevOps, QA, BA Y tế).
 - Bổ sung: 1 tư vấn pháp lý y tế / Data Protection Officer (DPO).
 
-9. Triển khai thí điểm (Commune Health Station)
+10. Triển khai thí điểm (Commune Health Station)
 - Ứng dụng PWA hoạt động Offline-first.
 - Các module: Tiếp nhận, Khám bệnh, Kho thuốc trạm, Tiêm chủng mở rộng + HSBAĐT lite + đồng bộ national.
 - Lộ trình: Setup DB → Tính năng lõi → Đồng bộ & Báo cáo → Triển khai thực địa.
 
-10. Lộ trình Phát triển & Thành tựu (Roadmap)
+11. Lộ trình Phát triển & Thành tựu (Roadmap)
 
 Đã đạt được:
 - Lõi UI Dashboard.

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HMIS DNA V12 - Enterprise Digital Health Proposal (Updated April 2026)</title>
+    <title>HMIS DNA V 1.2 - Enterprise Digital Health Proposal (Updated April 2026)</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -67,19 +67,19 @@
                     <i class="fas fa-microchip text-xl"></i>
                 </div>
                 <div>
-                    <span class="text-xl font-black tracking-tighter text-slate-900">SCP HMIS V12</span>
+                    <span class="text-xl font-black tracking-tighter text-slate-900">SCP HMIS V 1.2</span>
                     <span class="text-[10px] block font-bold text-medical-600 uppercase tracking-widest -mt-1">Enterprise Compliance</span>
                 </div>
             </div>
-            <nav class="hidden md:flex gap-8 text-sm font-semibold text-slate-600">
+            <nav class="hidden md:flex gap-6 text-xs font-bold text-slate-600 uppercase tracking-widest">
                 <a href="#strategy" class="nav-link">Chiến lược</a>
-                <a href="#modular" class="nav-link">Kiến trúc</a>
-                <a href="#compliance" class="nav-link">Tuân thủ 2026</a>
+                <a href="#compliance" class="nav-link">Tuân thủ</a>
                 <a href="#deployment" class="nav-link">Triển khai</a>
-                <a href="#roadmap" class="nav-link">Roadmap</a>
+                <a href="#budget" class="nav-link">Ngân sách</a>
+                <a href="#roadmap" class="nav-link">Mục tiêu</a>
             </nav>
             <button onclick="window.print()" class="bg-medical-600 hover:bg-medical-700 text-white px-5 py-2 rounded-full text-xs font-bold transition-all shadow-md flex items-center gap-2">
-                <i class="fas fa-file-pdf"></i> Tải DNA V12
+                <i class="fas fa-file-pdf"></i> Tải DNA V 1.2
             </button>
         </div>
     </header>
@@ -88,25 +88,25 @@
         
         <!-- Hero Section -->
         <section class="text-center space-y-6 pt-12 pb-6">
-            <span class="inline-block bg-medical-100 text-medical-700 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest border border-medical-200">Release Version 12.0</span>
+            <span class="inline-block bg-medical-100 text-medical-700 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest border border-medical-200">Release Version 1.2</span>
             <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-none px-4">
                 HMIS <span class="text-medical-600">ENTERPRISE DNA</span>
             </h1>
             <p class="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed italic">
-                Cập nhật pháp lý & Lộ trình tuân thủ Hồ sơ bệnh án điện tử (HSBAĐT) - Tháng 04/2026.
+                Cập nhật compliance, roadmap & Ngân sách chi tiết 18 tháng - Tháng 04/2026.
             </p>
             <div class="flex justify-center gap-4 pt-4">
                 <div class="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest border-r pr-4 border-slate-200">
                     <i class="far fa-calendar-check text-medical-500"></i> Ngày: 17/04/2026
                 </div>
                 <div class="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-                    <i class="fas fa-shield-alt text-teal-500"></i> Compliance Grade: Enterprise A+
+                    <i class="fas fa-coins text-teal-500"></i> Ngân sách triển khai: ~16,3 Tỷ VNĐ
                 </div>
             </div>
         </section>
 
         <!-- Section 1: Strategic Vision -->
-        <section id="strategy" class="space-y-8">
+        <section id="strategy" class="space-y-12 border-b pb-12 border-slate-100">
             <div class="flex items-center gap-4">
                 <h2 class="section-title text-3xl">Chiến lược Đa đối tượng & Đa cấp</h2>
             </div>
@@ -166,69 +166,10 @@
             </div>
         </section>
 
-        <!-- Section 2: Modular Architecture -->
-        <section id="modular" class="space-y-12">
-            <div class="flex items-center gap-4">
-                <h2 class="section-title text-3xl">Kiến trúc Module & Công nghệ 2026</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <div class="space-y-6">
-                    <div class="card p-6 border-slate-200 shadow-lg">
-                        <h4 class="text-xs font-black uppercase text-medical-600 mb-4 tracking-widest flex items-center gap-2">
-                            <i class="fas fa-cubes"></i> Hybrid Architecture (Kiến trúc "2 Tốc độ")
-                        </h4>
-                        <div class="space-y-4">
-                            <div class="p-4 bg-slate-50 rounded-xl border-l-4 border-blue-600">
-                                <span class="text-xs font-black text-slate-900 block space-x-2"><span>JAVA SPRING BOOT</span> <span class="bg-blue-600 text-white px-1.5 py-0.5 rounded text-[8px]">CORE</span></span>
-                                <p class="text-[11px] text-slate-500 mt-1">Users, RBAC, Billing, EMPI, Multi-tenant Foundation.</p>
-                            </div>
-                            <div class="p-4 bg-slate-50 rounded-xl border-l-4 border-yellow-500">
-                                <span class="text-xs font-black text-slate-900 block space-x-2"><span>PYTHON FASTAPI</span> <span class="bg-yellow-500 text-white px-1.5 py-0.5 rounded text-[8px]">MODULES</span></span>
-                                <p class="text-[11px] text-slate-500 mt-1">AI Chẩn đoán Hình ảnh, IoT Stream Processing, BI Reports.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 bg-slate-900 rounded-2xl text-white">
-                        <h4 class="text-[10px] font-black uppercase text-teal-400 tracking-widest mb-4">Scalable Stack Components</h4>
-                        <div class="grid grid-cols-2 gap-4 text-[10px] text-white/70 font-mono">
-                            <div>• PostgreSQL (RDS/Aurora)</div>
-                            <div>• TimescaleDB (IoT Sensors)</div>
-                            <div>• Redis (Cache & Session)</div>
-                            <div>• Hasura (GraphQL API)</div>
-                            <div>• PgEdge (Online-Offline Sync)</div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Code Block -->
-                <div class="space-y-4">
-                    <div class="code-block h-full shadow-2xl">
-                        <div class="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
-                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
-                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-                            <span class="w-3 h-3 rounded-full bg-teal-500"></span>
-                            <span class="ml-auto text-[9px] font-bold text-slate-500 uppercase italic">Circular 13/2025 Compliance</span>
-                        </div>
-<span class="highlight-blue"># Circular 13/2025 EMR Signing Logic</span>
-<span class="highlight-blue">class</span> <span class="highlight-teal">EMRSignatureModule</span>:
-    <span class="highlight-blue">def</span> <span class="highlight-teal">sign_stable_record</span>(self, patient_id, data):
-        <span class="highlight-teal"># SHA-256 Hashing + PKI Digital Signatures</span>
-        signature = pki_service.sign(data)
-        audit_bus.publish(<span class="highlight-teal">"EMR_FINAL_STABLE"</span>, {
-            <span class="highlight-teal">"patient"</span>: patient_id,
-            <span class="highlight-teal">"integrity"</span>: <span class="highlight-teal">"IMMUTABLE_WORM_STORE"</span>,
-            <span class="highlight-teal">"signed_by"</span>: current_user.doctor_id,
-            <span class="highlight-teal">"compliance"</span>: <span class="highlight-teal">"VNeID_L2_VERIFIED"</span>
-        })
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Section 3: Compliance 2026 -->
-        <section id="compliance" class="space-y-8">
+        <section id="compliance" class="space-y-8 scroll-mt-20">
             <h2 class="section-title text-3xl">Lộ trình Tuân thủ Pháp lý (Compliance Matrix 2026)</h2>
             
-            <!-- Legal Updates Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="p-4 bg-red-50 border border-red-100 rounded-xl">
                     <h5 class="text-[9px] font-bold text-red-600 uppercase mb-1">Dữ liệu cá nhân</h5>
@@ -251,7 +192,7 @@
             <div class="card overflow-hidden">
                 <table>
                     <thead>
-                        <tr><th>Tiêu chuẩn 2026</th><th>Yêu cầu kỹ thuật HMIS V12</th><th>Trạng thái</th></tr>
+                        <tr><th>Tiêu chuẩn 2026</th><th>Yêu cầu kỹ thuật HMIS V1.2</th><th>Trạng thái</th></tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -277,20 +218,10 @@
                     </tbody>
                 </table>
             </div>
-            
-            <div class="p-8 bg-slate-900 rounded-[3rem] text-center space-y-4 shadow-2xl">
-                <i class="fas fa-shield-halved text-teal-500 text-4xl mb-2"></i>
-                <h3 class="text-2xl font-black text-white uppercase tracking-tight">Security & Governance</h3>
-                <div class="flex flex-wrap justify-center gap-8 text-[11px] text-slate-400 font-bold uppercase tracking-widest">
-                    <span class="flex items-center gap-2"><i class="fas fa-fingerprint text-teal-400"></i> VNeID Authentication</span>
-                    <span class="flex items-center gap-2"><i class="fas fa-file-signature text-teal-400"></i> Digital Signatures</span>
-                    <span class="flex items-center gap-2"><i class="fas fa-user-lock text-teal-400"></i> Data Residency VN</span>
-                </div>
-            </div>
         </section>
 
         <!-- Section 6: Deployment -->
-        <section id="deployment" class="space-y-12">
+        <section id="deployment" class="space-y-12 scroll-mt-20">
             <h2 class="section-title text-3xl">Chiến lược Triển khai 400 Cơ sở (Roadmap 2026)</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="card p-8 bg-white border-medical-200">
@@ -312,22 +243,100 @@
                     <span class="text-[9px] font-bold text-slate-400 uppercase bg-slate-50 px-2 py-1 rounded">Deadline Dec 2026</span>
                 </div>
             </div>
+        </section>
+
+        <!-- Section 8: Detailed Budget -->
+        <section id="budget" class="space-y-8 scroll-mt-20">
+            <div class="flex justify-between items-end">
+                <h2 class="section-title text-3xl">Ngân sách Dự án (Budget Breakdown)</h2>
+                <span class="text-[10px] font-black uppercase text-slate-400 font-mono tracking-widest">Initial 18-Month Period</span>
+            </div>
             
-            <div class="card bg-medical-600 p-8 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between shadow-2xl group">
-                <div class="mb-4 md:mb-0">
-                    <h4 class="text-xs font-black uppercase opacity-70 mb-1">Tổng hạ tầng Cloud (400 Site)</h4>
-                    <div class="text-4xl font-black italic tracking-tighter group-hover:scale-105 transition-transform origin-left">~246 Triệu <span class="text-lg opacity-60">VNĐ/Tháng</span></div>
-                    <p class="text-[9px] mt-2 opacity-60 italic">* Đã tối ưu 84% so với AWS/Azure tại khu vực APAC.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 card overflow-hidden border-medical-100 shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr>
+                                    <th class="!bg-slate-900 !text-white !font-black !text-[10px]">Hạng mục triển khai</th>
+                                    <th class="!bg-medical-600 !text-white !font-black !text-center !text-[10px]">Phase 1 (6M)</th>
+                                    <th class="!bg-medical-700 !text-white !font-black !text-center !text-[10px]">Phase 2 (6M)</th>
+                                    <th class="!bg-medical-800 !text-white !font-black !text-center !text-[10px]">Phase 3 (6M)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-[11px] font-medium">
+                                <tr class="hover:bg-medical-50/30 transition-colors">
+                                    <td class="p-4 font-bold text-slate-800">Nhân sự (Core Team + DPO)</td>
+                                    <td class="p-4 text-center">1.800.000.000</td>
+                                    <td class="p-4 text-center">1.500.000.000</td>
+                                    <td class="p-4 text-center">1.200.000.000</td>
+                                </tr>
+                                <tr class="hover:bg-medical-50/30 transition-colors">
+                                    <td class="p-4 font-bold text-slate-800">Core Platform (EMR, National Gateway)</td>
+                                    <td class="p-4 text-center">2.200.000.000</td>
+                                    <td class="p-4 text-center">800.000.000</td>
+                                    <td class="p-4 text-center">400.000.000</td>
+                                </tr>
+                                <tr class="hover:bg-medical-50/30 transition-colors">
+                                    <td class="p-4 font-bold text-slate-800">Feature Modules (AI/IoT/BI)</td>
+                                    <td class="p-4 text-center">900.000.000</td>
+                                    <td class="p-4 text-center">1.100.000.000</td>
+                                    <td class="p-4 text-center text-slate-400 italic">700.000.000</td>
+                                </tr>
+                                <tr class="hover:bg-medical-50/30 transition-colors">
+                                    <td class="p-4 font-bold text-slate-800">VN-Cloud (Viettel/VNPT/VNG)</td>
+                                    <td class="p-4 text-center">600.000.000</td>
+                                    <td class="p-4 text-center">900.000.000</td>
+                                    <td class="p-4 text-center font-bold">1.200.000.000</td>
+                                </tr>
+                                <tr class="hover:bg-medical-50/30 transition-colors">
+                                    <td class="p-4 font-bold text-slate-800">Pilot, Training & Compliance Audit</td>
+                                    <td class="p-4 text-center">700.000.000</td>
+                                    <td class="p-4 text-center">500.000.000</td>
+                                    <td class="p-4 text-center">350.000.000</td>
+                                </tr>
+                                <tr class="hover:bg-medical-50/30 transition-colors">
+                                    <td class="p-4 font-bold text-slate-800">Dự phòng (10%)</td>
+                                    <td class="p-4 text-center italic">620.000.000</td>
+                                    <td class="p-4 text-center italic">480.000.000</td>
+                                    <td class="p-4 text-center italic">385.000.000</td>
+                                </tr>
+                                <tr class="bg-slate-50 font-black">
+                                    <td class="p-4 text-slate-900 uppercase">TỔNG THEO GIAI ĐOẠN (VNĐ)</td>
+                                    <td class="p-4 text-center text-medical-600">6.820.000.000</td>
+                                    <td class="p-4 text-center text-medical-600">5.280.000.000</td>
+                                    <td class="p-4 text-center text-medical-600">4.235.000.000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <h4 class="text-[10px] font-bold uppercase opacity-80 mb-1">Triển khai thí điểm Station</h4>
-                    <p class="text-xs font-medium bg-white/10 px-4 py-2 rounded-xl border border-white/20 italic">"PWA Offline-first + HSBAĐT Lite + National Sync"</p>
+                
+                <div class="space-y-6">
+                    <div class="p-6 bg-slate-900 rounded-3xl text-white shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-10 text-6xl"><i class="fas fa-coins"></i></div>
+                        <h4 class="text-[10px] font-black uppercase text-medical-400 tracking-widest mb-2">Total Project Budget</h4>
+                        <div class="text-3xl font-black tracking-tighter mb-1">~16,335 Tỷ</div>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase">VNĐ / 18 Months Total</p>
+                        <div class="mt-4 pt-4 border-t border-white/10 space-y-2">
+                            <div class="flex items-center gap-2 text-[10px]"><i class="fas fa-check-circle text-teal-500"></i> Phase 1: <span class="text-white">6,82 Tỷ (Core & Compliance)</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6 bg-medical-50 border-medical-200">
+                        <h4 class="text-[10px] font-black uppercase text-medical-800 mb-3 tracking-widest">Đội ngũ & Vận hành</h4>
+                        <ul class="text-[10px] space-y-2 text-slate-700">
+                            <li>• <b>Core Team:</b> 9 nhân sự nòng cốt.</li>
+                            <li>• <b>Bổ sung:</b> 01 DPO/Pháp lý Y tế.</li>
+                            <li>• <b>Duy trì:</b> ~246M VNĐ/Tháng (sau 18M).</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 8: Roadmap -->
-        <section id="roadmap" class="space-y-12">
+        <!-- Section 11: Roadmap -->
+        <section id="roadmap" class="space-y-12 scroll-mt-20">
             <h2 class="text-4xl font-black text-slate-900 text-center tracking-tight uppercase">Mục tiêu 6 tháng tới</h2>
             <div class="max-w-4xl mx-auto space-y-8">
                 <div class="flex items-start gap-8 relative pb-8">
@@ -337,7 +346,7 @@
                     </div>
                     <div class="flex-grow pt-2">
                         <h4 class="text-lg font-black text-slate-900 uppercase tracking-tight">Postgres Migration & RLS</h4>
-                        <p class="text-sm text-slate-500 mt-1 leading-relaxed italic">Chuyển đổi sang Hasura Multi-tenant Architecture với Row Level Security (RLS) triệt để cho từng tenant cơ sở.</p>
+                        <p class="text-sm text-slate-500 mt-1 leading-relaxed italic">Chuyển đổi sang Hasura Multi-tenant Architecture với Row Level Security (RLS) cho từng tenant cơ sở.</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-8 relative pb-8">
@@ -347,7 +356,7 @@
                     </div>
                     <div class="flex-grow pt-2">
                         <h4 class="text-lg font-black text-slate-900 uppercase tracking-tight">Ký số, VNeID & Thông tư 38/2024</h4>
-                        <p class="text-sm text-slate-500 mt-1 leading-relaxed italic">Kết nối trực tiếp API theo TT 38/2024, tích hợp định danh VNeID cho toàn bộ quy trình tiếp nhận & HSBAĐT.</p>
+                        <p class="text-sm text-slate-500 mt-1 leading-relaxed italic">Kết nối API theo TT 38/2024, tích hợp định danh VNeID cho toàn bộ quy trình KCB.</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-8 relative pb-8">
@@ -357,7 +366,7 @@
                     </div>
                     <div class="flex-grow pt-2">
                         <h4 class="text-lg font-black text-slate-900 uppercase tracking-tight">Compliance Dashboard & TT 13/2025</h4>
-                        <p class="text-sm text-slate-500 mt-1 leading-relaxed italic">Triển khai Dashboard kiểm tra tuân thủ tự động. Hoàn thành HSBAĐT theo Thông tư 13/2025 trước 30/09/2025.</p>
+                        <p class="text-sm text-slate-500 mt-1 leading-relaxed italic">Tự động hóa kiểm tra tuân thủ. Hoàn thành HSBAĐT theo TT 13/2025 trước 30/09/2025.</p>
                     </div>
                 </div>
             </div>
@@ -368,7 +377,7 @@
             <div class="flex justify-center gap-6 text-slate-300 mb-4 text-xl">
                 <i class="fas fa-shield-halved"></i>
                 <i class="fas fa-user-doctor"></i>
-                <i class="fas fa-cloud-arrow-up"></i>
+                <i class="fas fa-money-bill-trend-up"></i>
             </div>
             <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em]">© 2026 SCP Digital Health. "Technology for Healthier Communities"</p>
         </footer>
