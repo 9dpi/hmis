@@ -1,0 +1,4 @@
+*.md
+*DNA*
+!HMIS_Proposal.html
+!index.html
