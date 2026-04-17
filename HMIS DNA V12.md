@@ -96,6 +96,52 @@ Tổng ngân sách ước tính cho giai đoạn triển khai ban đầu (18 th�
 | Dự phòng (10%)                        | 620.000.000          | 480.000.000          | 385.000.000          | 1.485.000.000        |
 | **Tổng theo Phase**                   | **6.820.000.000**    | **5.280.000.000**    | **4.235.000.000**    | **16.335.000.000**   |
 
+
+**Chi tiết hóa từng hạng mục ngân sách:**
+
+**8.1 Nhân sự (Tổng 5,1 tỷ)**
+- 9 nhân sự nòng cốt (PM, 2 Kiến trúc sư, 3 Fullstack Dev, DevOps, QA, BA Y tế): 45 triệu/người/tháng × 21 tháng.
+- 1 DPO/Tư vấn pháp lý y tế: 60 triệu/tháng × 21 tháng.
+- Freelance/Outsource chuyên gia (HL7 FHIR, ký số CA): 120 triệu/phase.
+
+**8.2 Phát triển Core Platform & Compliance (Tổng 3,6 tỷ)**
+- Thiết kế & xây dựng Multi-tenant foundation (Java Spring Boot, RBAC, EMPI).
+- Tích hợp HSBAĐT, ký số điện tử CA, sinh trắc học, VNeID.
+- Xây dựng National Gateway (Thông tư 38/2024) + Compliance Dashboard.
+- Unit test, integration test, security audit.
+
+**8.3 Phát triển Feature Modules (Tổng 3,05 tỷ)**
+- AI chẩn đoán + Analytics (Python FastAPI + PyTorch/LangChain).
+- IoT Hub & TimescaleDB integration.
+- Module Kho dược, Billing, Dashboard nâng cao.
+- Offline sync engine (LiteSync/PgEdge) + conflict resolution.
+
+**8.4 Hạ tầng Cloud & License (Tổng 2,85 tỷ)**
+- Viettel Cloud / VNPT: Compute, Storage, Database (PostgreSQL + TimescaleDB).
+- License: Kafka, Redis Enterprise, Hasura, Grafana Enterprise.
+- SSL, WAF, Backup & Disaster Recovery.
+- Monitoring & Logging (ELK + SIEM).
+
+**8.5 Thiết bị pilot & Training (Tổng 1 tỷ)**
+- 10 bộ thiết bị pilot (máy tính, tablet, máy quét mã vạch, máy in nhãn thuốc).
+- Đào tạo end-user (bác sĩ, y tá, nhân viên kho) tại 10 site.
+- Training tài liệu & video hướng dẫn.
+
+**8.6 Tư vấn pháp lý, Audit & Compliance (Tổng 725 triệu)**
+- Data Protection Impact Assessment (DPIA).
+- Audit tuân thủ Thông tư 13/2025 & 38/2024.
+- Tư vấn chữ ký số CA + hợp đồng với nhà cung cấp quốc gia.
+- Kiểm toán bảo mật định kỳ (penetration test).
+
+**8.7 Dự phòng (10%)**
+- Rủi ro thay đổi yêu cầu pháp lý, chậm tiến độ pilot, biến động chi phí cloud.
+
+**Ghi chú ngân sách:**
+- Tổng ngân sách triển khai ban đầu (21 tháng): **~17,9575 tỷ VNĐ**.
+- Phase 1 chiếm tỷ trọng lớn nhất (38%) do tập trung compliance và core platform để đáp ứng deadline HSBAĐT 30/09/2025.
+- Sau 21 tháng, chuyển sang chế độ vận hành (hạ tầng ~246 triệu/tháng + bảo trì ~150 triệu/tháng).
+- Tất cả chi phí đã bao gồm VAT 10%.
+
 **Ghi chú ngân sách:**
 - Tổng ngân sách triển khai ban đầu (18 tháng): **~16,335 tỷ VNĐ**.
 - Phase 1 (6 tháng) tập trung mạnh vào compliance và core platform (~6,82 tỷ) để đảm bảo đáp ứng deadline HSBAĐT 30/09/2025.
