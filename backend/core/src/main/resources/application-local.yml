@@ -1,0 +1,63 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  # ── Exclude Kafka & Redis (không cần Docker) ───────────────
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+
+  # ── H2 In-Memory Database ──────────────────────────────────
+  datasource:
+    url: jdbc:h2:mem:hmis_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+  # ── JPA cho H2 ─────────────────────────────────────────────
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop      # Tự tạo bảng từ entities khi local
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  # ── Tắt Flyway (H2 sẽ auto-create từ JPA) ─────────────────
+  flyway:
+    enabled: false
+
+# ── Swagger vẫn hoạt động ──────────────────────────────────
+springdoc:
+  swagger-ui:
+    enabled: true
+
+# ── Logging ────────────────────────────────────────────────
+logging:
+  level:
+    com.hmis: DEBUG
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{HH:mm:ss} [%-5level] %logger{20} – %msg%n"
+
+# ── JWT dummy secret cho local ────────────────────────────
+hmis:
+  jwt:
+    secret: bG9jYWwtaG1pcy1zZWNyZXQta2V5LWF0LWxlYXN0LTI1Ni1iaXRzLWxvbmctZm9yLXRlc3Rpbmctb25seQ==
+    expiration-ms: 86400000
+  cors:
+    allowed-origins: "http://localhost:3000,http://localhost:5173,http://127.0.0.1,null"
+  tenant:
+    default-code: TRAM_YTE_MAU
