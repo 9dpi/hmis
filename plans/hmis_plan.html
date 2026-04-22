@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiến Trúc Hệ Thống HIS - Tổng Quan Dự Án (V2)</title>
+    <style>
+        /* --- Global Styling --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #0056b3;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
+        /* --- Component Styling --- */
+        .section-box {
+            background-color: #eaf6ff;
+            border-left: 5px solid #007bff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .tech-section h3 {
+            color: #0056b3;
+        }
+        /* Schema for Process Diagram Area */
+        .process-diagram {
+            background-color: #f4f7fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+        }
+        /* Schema for Table/Card Data */
+        .tech-card-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .tech-card {
+            flex: 1 1 200px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        /* Schema for Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #e9ecef;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Styling specific to specific data blocks */
+        .api-card {
+            background-color: #e6f7ff;
+            border-left: 5px solid #007bff;
+        }
+        .protocol-card {
+            background-color: #f0fff4;
+            border-left: 5px solid #28a745;
+        }
+
+    </style>
+    <!-- Start of Content -->
+    <h1>System Architecture & Components Overview</h1>
+
+    <div class="process-diagram">
+        <h2>System Process Flow Diagram (Conceptual)</h2>
+        <p>Visual representation of data flow:</p>
+        <div style="display: flex; justify-content: space-around; align-items: center; text-align: center; margin-top: 30px;">
+            <div style="background-color: #ffe0b2; padding: 15px; border-radius: 10px; width: 20%;"><strong>[Client/Mobile App]</strong></div>
+            <div style="background-color: #c8e6c9; padding: 15px; border-radius: 10px; width: 30%;">⬇️ (API Gateway/Load Balancer)</div>
+            <div style="background-color: #bbdefb; padding: 15px; border-radius: 10px; width: 30%;"><strong>[Microservices Layer (API Gateway)]</strong></div>
+            <div style="background-color: #ffcdd2; padding: 15px; border-radius: 10px; width: 20%;">⬇️ (Database/External Services)</div>
+        </div>
+    </div>
+
+    <div class="tech-section">
+        <h3>1. Core Technical Components (Microservices)</h3>
+        <p>Details on the dedicated, scalable services architecture.</p>
+        <div class="tech-card-container">
+            <div class="tech-card api-card">
+                <strong>Authentication Service</strong>
+                <p>Handles OAuth2, JWT generation, and user identity management. Critical security layer.</p>
+            </div>
+            <div class="tech-card api-card">
+                <strong>User Profile Service</strong>
+                <p>Manages CRUD operations for user data, preferences, and personal records.</p>
+            </div>
+            <div class="tech-card api-card">
+                <strong>Notification Service</strong>
+                <p>Manages push notifications (Firebase/APNS) and email dispatch queueing.</p>
+            </div>
+             <div class="tech-card api-card">
+                <strong>Data Processing Service</strong>
+                <p>Handles heavy lifting tasks (e.g., image resizing, complex analytics batch jobs).</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-section">
+        <h3>2. Communication Protocols & Layers</h3>
+        <p>The standardized ways services communicate with each other and clients.</p>
+        <div class="tech-card-container">
+            <div class="tech-card protocol-card">
+                <strong>REST/HTTP</strong>
+                <p>Primary communication method for synchronous client-to-gateway calls. Utilizes JSON payload.</p>
+            </div>
+            <div class="tech-card protocol-card">
+                <strong>Message Queues (Kafka/RabbitMQ)</strong>
+                <p>Used for asynchronous, decoupled communication (e.g., User registration -> Notification queue).</p>
+            </div>
+            <div class="tech-card protocol-card">
+                <strong>gRPC</strong>
+                <p>Efficient RPC for internal, high-throughput microservice-to-microservice communication.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-section">
+        <h3>3. Data Persistence Layer</h3>
+        <p>Selecting the right database for the right job (Polyglot Persistence).</p>
+        <div class="tech-card-container">
+            <div class="tech-card">
+                <strong>PostgreSQL</strong>
+                <p>Primary source of truth for structured data (User credentials, transactional records).</p>
+            </div>
+            <div class="tech-card">
+                <strong>Redis</strong>
+                <p>Caching layer for session tokens, frequently accessed data, and rate limiting counters.</p>
+            </div>
+            <div class="tech-card">
+                <strong>Elasticsearch</strong>
+                <p>Used for advanced, full-text search capabilities across large datasets.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-section">
+        <h3>4. Data Flow & Asynchronous Processing</h3>
+        <p>Workflow management and message brokering.</p>
+        <div class="tech-card-container">
+            <div class="tech-card api-card">
+                <strong>API Gateway (Zuul/Spring Cloud Gateway)</strong>
+                <p>Acts as the single entry point, handling rate limiting, request routing, and cross-cutting concerns.</p>
+            </div>
+            <div class="tech-card api-card">
+                <strong>Message Broker (Kafka)</strong>
+                <p>Decouples producers and consumers. Essential for handling spikes and background processing reliability.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-section">
+        <h3>5. Schema Summary (Conceptual Table)</h3>
+        <p>Summary of data models and dependencies.</p>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Primary Database</th>
+                    <th>Key Data Type</th>
+                    <th>Relationship</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>User Management</td>
+                    <td>PostgreSQL</td>
+                    <td>JSONB (Profile)</td>
+                    <td>1:N (User $\to$ Notifications)</td>
+                </tr>
+                <tr>
+                    <td>Search Indexing</td>
+                    <td>Elasticsearch</td>
+                    <td>Text Vectors</td>
+                    <td>1:1 (Source $\leftrightarrow$ Index)</td>
+                </tr>
+                <tr>
+                    <td>Session Mgmt</td>
+                    <td>Redis</td>
+                    <td>Key-Value (JWT)</td>
+                    <td>Transient</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- End of Content -->

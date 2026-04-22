@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiến Trúc Hệ Thống HIS - Tổng Quan Dự Án</title>
+    <style>
+        /* --- Global Styling --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #0056b3;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
+        /* --- Component Styling --- */
+        .section-box {
+            background-color: #eaf6ff;
+            border-left: 5px solid #007bff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .component-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .component-card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            flex: 1 1 calc(33% - 20px);
+            min-width: 250px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        /* Điều chỉnh cho hiển thị trên di động */
+        @media (max-width: 768px) {
+            .component-card {
+                flex: 1 1 100%;
+            }
+        }
+        ul {
+            padding-left: 25px;
+        }
+        .timeline-item {
+            margin-bottom: 25px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '●';
+            color: #007bff;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            position: absolute;
+            left: 0;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffecb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Hệ Thống Thông Tin Bệnh Viện (HIS) - Tổng Quan Kiến Trúc</h1>
+        <p style="font-size: 1.1em; color: #555;">Tài liệu này cung cấp cái nhìn tổng quan về các thành phần, luồng dữ liệu và các giai đoạn triển khai của hệ thống HIS thế hệ mới.</p>
+
+        <!-- PHẦN 1: THÀNH PHẦN HỆ THỐNG -->
+        <h2>🧩 1. Kiến Trúc và Các Thành Phần Chính</h2>
+        <div class="section-box">
+            <p>Hệ thống được thiết kế theo kiến trúc Microservices, đảm bảo khả năng mở rộng, tính sẵn sàng cao và dễ dàng cập nhật từng module độc lập.</p>
+        </div>
+
+        <div class="component-grid">
+            <div class="component-card">
+                <strong>🩺 Module Lâm Sàng (EHR/EMR)</strong>
+                <p>Hồ sơ bệnh án điện tử, kết quả xét nghiệm, lịch khám.</p>
+            </div>
+            <div class="component-card">
+                <strong>💊 Module Thuốc & Kho (Pharmacy/Inventory)</strong>
+                <p>Quản lý tồn kho thuốc, liều lượng, luân chuyển thuốc theo tiêu chuẩn y tế.</p>
+            </div>
+            <div class="component-card">
+                <strong>👤 Module Quản lý Người dùng (User/Auth)</strong>
+                <p>Xác thực đa yếu tố (MFA), phân quyền truy cập theo vai trò (RBAC).</p>
+            </div>
+            <div class="component-card">
+                <strong>🗄️ Core Database Layer</strong>
+                <p>Lớp dữ liệu tập trung, tuân thủ các tiêu chuẩn bảo mật dữ liệu y tế (HIPAA/GDPR).</p>
+            </div>
+            <div class="component-card">
+                <strong>🌐 API Gateway</strong>
+                <p>Điểm vào duy nhất cho mọi giao tiếp, xử lý cân bằng tải và xác thực API.</p>
+            </div>
+        </div>
+
+        <!-- PHẦN 2: LUỒNG DỮ LIỆU -->
+        <h2>🌊 2. Luồng Dữ Liệu Trọng Yếu (Data Flow)</h2>
+        <div class="section-box">
+            <p>Dữ liệu di chuyển liên tục giữa các module, được trung gian hóa qua API Gateway, đảm bảo tính nhất quán và truy vết mọi giao dịch.</p>
+        </div>
+        <div style="padding: 20px 0;">
+            <p><strong><span style="color: #d9534f;">[Nhập liệu tại POS/Kho] </span> ➡️ <span style="color: #f0ad4e;">[API Gateway] </span> ➡️ <span style="color: #5cb85c;">[Lưu trữ & Xử lý] </span> ➡️ <span style="color: #007bff;">[Hiển thị trên Bảng Điều khiển]</span></strong></p>
+        </div>
+
+
+        <!-- PHẦN 3: GIAI ĐOẠN TRIỂN KHAI -->
+        <h2>🚀 3. Các Giai Đoạn Triển Khai (Roadmap)</h2>
+        
+        <div class="timeline-item">
+            <strong>Giai đoạn 1: Nền tảng và Khám bệnh ngoại trú (MVP)</strong>
+            <p>Tập trung vào các chức năng cơ bản: Khai thông hồ sơ, tra cứu lịch khám, và tích hợp kết nối cơ bản với phòng Lab.</p>
+        </div>
+        
+        <div class="timeline-item">
+            <strong>Giai đoạn 2: Tích hợp Điều trị và Dược phẩm</strong>
+            <p>Mở rộng sang quản lý toa thuốc điện tử, kiểm tra tương tác thuốc, và tích hợp kho dược phẩm tự động.</p>
+        </div>
+
+        <div class="timeline-item">
+            <strong>Giai đoạn 3: Quản lý Toàn diện & Báo cáo</strong>
+            <p>Bao gồm quản lý khoa lâm sàng, thu phí, tích hợp HIS với các hệ thống bên ngoài (Bảo hiểm y tế) và xây dựng hệ thống BI.</p>
+        </div>
+        
+        <!-- PHẦN 4: TÓM TẮT RỦI RO -->
+        <h2>⚠️ Lưu ý và Quản lý Rủi Ro</h2>
+        <div class="highlight">
+            <p><strong>Bảo mật là ưu tiên số 1:</strong> Mọi luồng dữ liệu phải được mã hóa (Encryption) ở cả trạng thái nghỉ (at rest) và trạng thái truyền (in transit). Cần có quy trình kiểm thử xâm nhập (Penetration Testing) nghiêm ngặt trước khi Go-live.</p>
+        </div>
+
+    </div>
+</body>
+</html>

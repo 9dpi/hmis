@@ -2,3 +2,30 @@
 *DNA*
 !HMIS_Proposal.html
 !index.html
+
+# ── Backend – Java / Maven ───────────────────────────────────
+backend/core/target/
+backend/core/.mvn/
+backend/**/*.class
+backend/**/*.jar
+backend/**/*.war
+backend/**/.classpath
+backend/**/.project
+backend/**/.settings/
+backend/**/.idea/
+backend/**/nb-configuration.xml
+
+# ── Docker volumes & local overrides ─────────────────────────
+backend/.env
+backend/volumes/
+
+# ── IDE ───────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/settings.json
+*.suo
+*.user
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

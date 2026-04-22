@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMIS - Kế hoạch Triển khai Hệ thống Module hóa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --bg-gray: #f8fafc;
+            --border: #e2e8f0;
+            --radius: 8px;
+            --orange: #ea580c;
+            --amber: #d97706;
+            --green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        section {
+            margin-bottom: 48px;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        h2::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .arch-box {
+            background: var(--bg-gray);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .phase-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            padding: 24px;
+        }
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .phase-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .phase-duration {
+            font-size: 0.85rem;
+            background: var(--bg-gray);
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .task-list {
+            list-style: none;
+        }
+        .task-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+        .task-item:last-child { border-bottom: none; }
+        .task-role {
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .kpi-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .kpi-table th {
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .kpi-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+        }
+        .kpi-val {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .tech-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+        }
+        .tech-card h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        .tech-card p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .status-planned { background: #dbeafe; color: #1e40af; }
+        .status-warning { background: #fed7aa; color: #9a3412; }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+        }
+
+        @media (max-width: 700px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            .stats-row { gap: 20px; }
+            .task-item { grid-template-columns: 1fr; gap: 4px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 HMIS - Hệ thống Quản lý Y tế Module hóa</h1>
+            <p class="subtitle">Kế hoạch phát triển nền tảng với kiến trúc Plugin - Module Bus - Event Driven</p>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-label">Thời gian MVP</span>
+                    <span class="stat-value">12 Tuần</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Nhân sự lõi</span>
+                    <span class="stat-value">6-8 Người</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Mô hình</span>
+                    <span class="stat-value">Offline-first + Module</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Ngôn ngữ</span>
+                    <span class="stat-value">Java + Python</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==================== KIẾN TRÚC ==================== -->
+        <section>
+            <h2>🏗️ Kiến trúc Hệ thống Module hóa</h2>
+            <div class="arch-box">
+                <svg width="100%" viewBox="0 0 780 620" xmlns="http://www.w3.org/2000/svg" style="max-width:100%; height:auto">
+                    <!-- Layer 1: PWA Frontend -->
+                    <rect x="10" y="10" width="760" height="90" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
+                    <text x="390" y="35" text-anchor="middle" font-weight="700" font-size="14" fill="#1e293b">Lớp 1: PWA Frontend (React + Service Worker)</text>
+                    <text x="390" y="55" text-anchor="middle" font-size="12" fill="#64748b">Offline-first · IndexedDB · Mobile Responsive · PWA Installable</text>
+                    <g transform="translate(20, 68)">
+                        <rect width="100" height="24" rx="3" fill="#fff" stroke="#cbd5e1"/><text x="50" y="16" text-anchor="middle" font-size="9" fill="#475569">Tiếp nhận</text>
+                        <rect width="100" height="24" rx="3" fill="#fff" stroke="#cbd5e1" x="110"/><text x="160" y="16" text-anchor="middle" font-size="9" fill="#475569">Khám bệnh</text>
+                        <rect width="100" height="24" rx="3" fill="#fff" stroke="#cbd5e1" x="220"/><text x="270" y="16" text-anchor="middle" font-size="9" fill="#475569">Kho thuốc</text>
+                        <rect width="100" height="24" rx="3" fill="#fff" stroke="#cbd5e1" x="330"/><text x="380" y="16" text-anchor="middle" font-size="9" fill="#475569">Tiêm chủng</text>
+                        <rect width="100" height="24" rx="3" fill="#fff" stroke="#cbd5e1" x="440"/><text x="490" y="16" text-anchor="middle" font-size="9" fill="#475569">Báo cáo</text>
+                        <rect width="100" height="24" rx="3" fill="#fff" stroke="#cbd5e1" x="550"/><text x="600" y="16" text-anchor="middle" font-size="9" fill="#475569">Cấp cứu</text>
+                    </g>
+
+                    <path d="M390 100 V130" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+                    <!-- Layer 2: API Gateway -->
+                    <rect x="10" y="140" width="760" height="80" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+                    <text x="390" y="165" text-anchor="middle" font-weight="700" font-size="14" fill="#1e3a8a">Lớp 2: API Gateway (Kong / Spring Cloud Gateway)</text>
+                    <text x="390" y="185" text-anchor="middle" font-size="12" fill="#3b82f6">Rate Limiting · JWT Verification · Request Routing · Load Balancing</text>
+
+                    <path d="M390 220 V250" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+                    <!-- Layer 3: Core Platform + Module Bus -->
+                    <rect x="10" y="260" width="760" height="130" rx="6" fill="#fef3c7" stroke="#fcd34d"/>
+                    <text x="390" y="285" text-anchor="middle" font-weight="700" font-size="14" fill="#92400e">Lớp 3: Core Platform (Java Spring Boot 3) + Module Bus</text>
+                    <text x="390" y="305" text-anchor="middle" font-size="12" fill="#d97706">Plugin Manager · Module Registry · Lifecycle Hooks · Dependency Resolver</text>
+                    
+                    <!-- Module Bus components -->
+                    <g transform="translate(20, 320)">
+                        <rect width="140" height="28" rx="4" fill="#fff" stroke="#fde68a"/>
+                        <text x="70" y="19" text-anchor="middle" font-size="9" fill="#92400e">Module Registry</text>
+                        
+                        <rect width="140" height="28" rx="4" fill="#fff" stroke="#fde68a" x="150"/>
+                        <text x="220" y="19" text-anchor="middle" font-size="9" fill="#92400e">Event Bus (Kafka)</text>
+                        
+                        <rect width="140" height="28" rx="4" fill="#fff" stroke="#fde68a" x="300"/>
+                        <text x="370" y="19" text-anchor="middle" font-size="9" fill="#92400e">Lifecycle Mgr</text>
+                        
+                        <rect width="140" height="28" rx="4" fill="#fff" stroke="#fde68a" x="450"/>
+                        <text x="520" y="19" text-anchor="middle" font-size="9" fill="#92400e">API Contract Validator</text>
+                        
+                        <rect width="140" height="28" rx="4" fill="#fff" stroke="#fde68a" x="600"/>
+                        <text x="670" y="19" text-anchor="middle" font-size="9" fill="#92400e">Auth (JWT/RBAC)</text>
+                    </g>
+
+                    <path d="M390 390 V420" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+                    <!-- Layer 4: Module Layer (Python + Java) -->
+                    <rect x="10" y="430" width="760" height="90" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+                    <text x="390" y="455" text-anchor="middle" font-weight="700" font-size="14" fill="#166534">Lớp 4: Module Layer (Độc lập, có thể cắm/gỡ)</text>
+                    <text x="390" y="475" text-anchor="middle" font-size="12" fill="#22c55e">Java Modules (Core) · Python Modules (IoT/AI/Device)</text>
+                    
+                    <g transform="translate(20, 490)">
+                        <rect width="110" height="24" rx="3" fill="#fff" stroke="#bbf7d0"/><text x="55" y="16" text-anchor="middle" font-size="9" fill="#166534">EHR (Java)</text>
+                        <rect width="110" height="24" rx="3" fill="#fff" stroke="#bbf7d0" x="120"/><text x="175" y="16" text-anchor="middle" font-size="9" fill="#166534">Pharma (Java)</text>
+                        <rect width="110" height="24" rx="3" fill="#fff" stroke="#bbf7d0" x="240"/><text x="295" y="16" text-anchor="middle" font-size="9" fill="#166534">Vaccine (Java)</text>
+                        <rect width="110" height="24" rx="3" fill="#fef3c7" stroke="#fcd34d" x="360"/><text x="415" y="16" text-anchor="middle" font-size="9" fill="#92400e">IoT (Python)</text>
+                        <rect width="110" height="24" rx="3" fill="#fef3c7" stroke="#fcd34d" x="480"/><text x="535" y="16" text-anchor="middle" font-size="9" fill="#92400e">AI (Python)</text>
+                        <rect width="110" height="24" rx="3" fill="#fef3c7" stroke="#fcd34d" x="600"/><text x="655" y="16" text-anchor="middle" font-size="9" fill="#92400e">Device (Python)</text>
+                    </g>
+
+                    <path d="M390 520 V550" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+                    <!-- Layer 5: Data Layer -->
+                    <rect x="10" y="560" width="760" height="50" rx="6" fill="#f0f9ff" stroke="#bae6fd"/>
+                    <text x="390" y="585" text-anchor="middle" font-weight="700" font-size="13" fill="#0369a1">Lớp 5: Data Layer · PostgreSQL · TimescaleDB (IoT) · Redis · S3</text>
+
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+        </section>
+
+        <!-- ==================== TECH STACK ==================== -->
+        <section>
+            <h2>⚙️ Technology Stack (Đa ngôn ngữ)</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h4>🎯 Core Platform</h4>
+                    <p>Java 21 · Spring Boot 3 · Spring Security · JWT · Kafka · gRPC</p>
+                </div>
+                <div class="tech-card">
+                    <h4>🐍 Python Modules</h4>
+                    <p>Python 3.12 · FastAPI · MQTT · Paho · TensorFlow · LangChain</p>
+                </div>
+                <div class="tech-card">
+                    <h4>📱 Frontend PWA</h4>
+                    <p>React 18 · Vite · TailwindCSS · IndexedDB · Workbox · Chart.js</p>
+                </div>
+                <div class="tech-card">
+                    <h4>🗄️ Database</h4>
+                    <p>PostgreSQL 15 · TimescaleDB · Redis 7 · InfluxDB · S3</p>
+                </div>
+                <div class="tech-card">
+                    <h4>☁️ Infrastructure</h4>
+                    <p>Docker · Kubernetes (K3s) · Viettel Cloud · GitHub Actions · Prometheus · Grafana · Loki</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== MODULE ROADMAP ==================== -->
+        <section>
+            <h2>📦 Lộ trình phát triển Module</h2>
+            <div class="arch-box">
+                <table style="width:100%; border-collapse:collapse">
+                    <thead>
+                        <tr><th style="text-align:left; padding:8px 0; border-bottom:2px solid var(--border)">Module</th>
+                        <th style="text-align:left; padding:8px 0; border-bottom:2px solid var(--border)">Công nghệ</th>
+                        <th style="text-align:left; padding:8px 0; border-bottom:2px solid var(--border)">Giai đoạn</th>
+                        <th style="text-align:left; padding:8px 0; border-bottom:2px solid var(--border)">Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Core Platform (Auth, RBAC, Module Bus)</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Java</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Phase 1</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9"><span class="status-badge status-planned">✅ Planned</span></td></tr>
+                        <tr><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">EHR (Patient, Visit, Prescription)</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Java</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Phase 1</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9"><span class="status-badge status-planned">✅ Planned</span></td></tr>
+                        <tr><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Pharma (Drug Inventory)</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Java</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Phase 2</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9"><span class="status-badge status-planned">✅ Planned</span></td></tr>
+                        <tr><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Vaccine (Immunization)</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Java</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Phase 2</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9"><span class="status-badge status-planned">✅ Planned</span></td></tr>
+                        <tr><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">IoT Gateway (MQTT, WebSocket)</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Python</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Phase 2</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9"><span class="status-badge status-warning">⚠️ Cần bổ sung</span></td></tr>
+                        <tr><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">AI Assistant (Diagnosis Support)</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Python + LLM</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9">Phase 3</td><td style="padding:8px 0; border-bottom:1px solid #f1f5f9"><span class="status-badge status-warning">⚠️ Cần bổ sung</span></td></tr>
+                        <tr><td style="padding:8px 0">Device Manager (Medical Devices)</td><td style="padding:8px 0">Python</td><td style="padding:8px 0">Phase 3</td><td style="padding:8px 0"><span class="status-badge status-warning">⚠️ Cần bổ sung</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== MODULE INTERFACE ==================== -->
+        <section>
+            <h2>🔌 Module Interface Chuẩn (API Contract)</h2>
+            <div class="arch-box">
+                <p style="margin-bottom:12px"><strong>Mỗi module bắt buộc phải implement các endpoint sau:</strong></p>
+                <div class="task-list">
+                    <div class="task-item"><span class="task-role">GET /health</span><span>Kiểm tra trạng thái module (return {status: "up", version: "1.0.0"})</span></div>
+                    <div class="task-item"><span class="task-role">GET /info</span><span>Metadata: name, version, language, dependencies, apis, events</span></div>
+                    <div class="task-item"><span class="task-role">POST /webhook/{event}</span><span>Nhận event từ Event Bus (Kafka / Webhook)</span></div>
+                    <div class="task-item"><span class="task-role">GET /openapi.json</span><span>OpenAPI 3.0 specification cho module</span></div>
+                    <div class="task-item"><span class="task-role">POST /config/reload</span><span>Hot-reload configuration (không restart module)</span></div>
+                </div>
+                <div style="margin-top:16px; background:#f1f5f9; padding:12px; border-radius:8px">
+                    <p style="font-size:0.85rem; font-family:monospace; margin:0"><strong>Lifecycle Hooks:</strong> on_install() → on_enable() → [running] → on_disable() → on_uninstall()</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== EVENT BUS ==================== -->
+        <section>
+            <h2>📡 Event Bus - Giao tiếp giữa các Module</h2>
+            <div class="arch-box">
+                <table style="width:100%; border-collapse:collapse">
+                    <thead><tr><th style="text-align:left; padding:8px 0">Event</th><th style="text-align:left; padding:8px 0">Publisher</th><th style="text-align:left; padding:8px 0">Subscriber</th><th style="text-align:left; padding:8px 0">Mô tả</th></tr></thead>
+                    <tbody>
+                        <tr><td style="padding:6px 0; border-bottom:1px solid #f1f5f9"><code>patient.created</code></td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">EHR</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">AI, IoT, Vaccine</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Bệnh nhân mới được tạo</td></tr>
+                        <tr><td style="padding:6px 0; border-bottom:1px solid #f1f5f9"><code>visit.completed</code></td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">EHR</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">AI, Pharma, Analytics</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Kết thúc lượt khám</td></tr>
+                        <tr><td style="padding:6px 0; border-bottom:1px solid #f1f5f9"><code>telemetry.received</code></td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">IoT</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">AI, Analytics, Core</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Dữ liệu cảm biến mới</td></tr>
+                        <tr><td style="padding:6px 0; border-bottom:1px solid #f1f5f9"><code>inventory.low</code></td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Pharma</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Core, Device</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Thuốc sắp hết (dưới ngưỡng)</td></tr>
+                        <tr><td style="padding:6px 0; border-bottom:1px solid #f1f5f9"><code>alert.triggered</code></td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">AI</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Core, IoT, Frontend</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Cảnh báo bất thường (sốt, huyết áp)</td></tr>
+                        <tr><td style="padding:6px 0; border-bottom:1px solid #f1f5f9"><code>device.offline</code></td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">IoT</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Core, Device Mgr</td><td style="padding:6px 0; border-bottom:1px solid #f1f5f9">Thiết bị y tế mất kết nối</td></tr>
+                        <tr><td style="padding:6px 0"><code>vaccine.due</code></td><td style="padding:6px 0">Vaccine</td><td style="padding:6px 0">Core, Frontend</td><td style="padding:6px 0">Đến lịch tiêm chủng cho trẻ</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== ROADMAP ==================== -->
+        <section>
+            <h2>🗓️ Lộ trình Triển khai theo tuần</h2>
+
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-title">🔷 Giai đoạn 1: Nền tảng & Hệ thống lõi (Java Core)</span>
+                    <span class="phase-duration">Tuần 1 - 4</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item"><span class="task-role">Tuần 1</span><span>Thiết kế ERD, Multi-tenant strategy, Security policy, Module Registry schema</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 2</span><span>Cấu hình Cloud (Viettel), PostgreSQL (RLS), Redis, Kafka, CI/CD Pipeline</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 3</span><span>Phát triển Module Bus (dynamic loading), Plugin Manager, Lifecycle Hooks</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 4</span><span>Auth (JWT/RBAC), Core API cho Patient & Visit, Event Bus setup</span></div>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-title">🔶 Giai đoạn 2: Module nghiệp vụ + IoT Gateway</span>
+                    <span class="phase-duration">Tuần 5 - 9</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item"><span class="task-role">Tuần 5-6</span><span>Module Pharma (kho thuốc, nhập/xuất, cảnh báo tồn kho)</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 7</span><span>Module Vaccine (tiêm chủng mở rộng, lịch hẹn, nhắc nhở)</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 8</span><span>Module IoT Gateway (MQTT broker, WebSocket, telemetry ingestion)</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 9</span><span>Cơ chế Offline Sync (IndexedDB ↔ Server), PWA hoàn chỉnh</span></div>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-title">🟢 Giai đoạn 3: AI, Device Manager & UAT</span>
+                    <span class="phase-duration">Tuần 10 - 12</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item"><span class="task-role">Tuần 10</span><span>Module AI Assistant (triệu chứng → gợi ý chẩn đoán, drug interaction)</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 11</span><span>Module Device Manager (quản lý máy đo huyết áp, nhiệt kế, cảm biến)</span></div>
+                    <div class="task-item"><span class="task-role">Tuần 12</span><span>UAT tại Trạm Y tế thực, đào tạo nhân viên, bàn giao tài liệu</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== KPI ==================== -->
+        <section>
+            <h2>📊 Chỉ số Cam kết (KPI)</h2>
+            <div class="kpi-grid">
+                <div>
+                    <table class="kpi-table">
+                        <thead><tr><th>Kỹ thuật</th><th class="kpi-val">Mục tiêu</th></tr></thead>
+                        <tbody>
+                            <tr><td>Tốc độ phản hồi API</td><td class="kpi-val">&lt; 500ms</td></tr>
+                            <tr><td>Thời gian chạy Offline</td><td class="kpi-val">&gt; 8 giờ</td></tr>
+                            <tr><td>Độ khả dụng (Uptime)</td><td class="kpi-val">99.9%</td></tr>
+                            <tr><td>Module load time</td><td class="kpi-val">&lt; 2 giây</td></tr>
+                            <tr><td>Event propagation latency</td><td class="kpi-val">&lt; 100ms</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <table class="kpi-table">
+                        <thead><tr><th>Nghiệp vụ</th><th class="kpi-val">Mục tiêu</th></tr></thead>
+                        <tbody>
+                            <tr><td>Tiếp nhận bệnh nhân</td><td class="kpi-val">&lt; 3 phút</td></tr>
+                            <tr><td>Kê đơn thuốc</td><td class="kpi-val">&lt; 2 phút</td></tr>
+                            <tr><td>Xuất báo cáo tháng</td><td class="kpi-val">1 Click</td></tr>
+                            <tr><td>Đồng bộ offline → online</td><td class="kpi-val">&lt; 30 giây</td></tr>
+                            <tr><td>AI diagnosis accuracy</td><td class="kpi-val">&gt; 85%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== COMPLIANCE ==================== -->
+        <section>
+            <h2>📜 Tuân thủ Quy định</h2>
+            <div class="arch-box">
+                <div class="tech-grid">
+                    <div class="tech-card"><h4>📋 Nghị định 54/CP</h4><p>CNTT trong cơ sở khám chữa bệnh - Audit trail, bảo mật dữ liệu</p></div>
+                    <div class="tech-card"><h4>🔒 Nghị định 13/2023</h4><p>Bảo vệ dữ liệu cá nhân - Mã hóa, consent management, data retention</p></div>
+                    <div class="tech-card"><h4>🏥 Thông tư 54/2017/TT-BYT</h4><p>Hồ sơ bệnh án điện tử - Chuẩn dữ liệu, lưu trữ 10 năm</p></div>
+                    <div class="tech-card"><h4>🌐 HL7 FHIR R4</h4><p>Trao đổi dữ liệu y tế - RESTful APIs, resource-based</p></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer">
+            <p>📧 tech@hmis.vn | 🔒 DPO: dpo@hmis.vn | 📞 Hotline: 1900 HMIS</p>
+            <p>&copy; 2026 HMIS Project Team - Giải pháp thông minh cho y tế cơ sở</p>
+        </div>
+    </div>
+</body>
+</html>
