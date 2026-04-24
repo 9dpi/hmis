@@ -1,28 +1,25 @@
 <!DOCTYPE html>
-<html lang="vi" x-data="{ 
-    darkMode: localStorage.getItem('darkMode') === 'true', 
-    activeTab: 'patients',
-    patients: [],
-    selectedPatient: null,
-    medicalRecords: [],
-    loading: false,
-    apiUrl: 'http://localhost:8080/api/v1/ehr',
-    token: localStorage.getItem('hmis_token') || ''
-}" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
-
+<html lang="vi" x-data="ehrApp()" :class="{ 'dark': darkMode }" x-init="init()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EHR Testing Module - SCP HMIS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>SCP HMIS - Bệnh án điện tử Premium</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
+                        teal: { 500: '#0d9488', 600: '#0f766e', 700: '#115e59' },
                         scp: { bg: '#0f172a', card: '#1e293b', primary: '#0d9488', accent: '#22d3ee' }
                     }
                 }
@@ -30,237 +27,576 @@
         }
     </script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
         [x-cloak] { display: none !important; }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        body { font-family: 'Inter', sans-serif; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
-        .dark .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(30, 41, 59, 0.8);
         }
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
+
+        .input-premium {
+            @apply w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-[1.25rem] px-6 py-4 text-base font-medium focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10 transition-all outline-none placeholder:text-slate-400;
+        }
+
+        .input-premium:hover {
+            @apply border-teal-500/50 dark:border-teal-500/30;
+        }
+
+        .btn-primary {
+            @apply px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-teal-600/20 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(13, 148, 136, 0.3); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 dark:bg-slate-800 rounded-full; }
+
+        .badge { @apply px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter; }
+        
+        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 
-<body class="bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 font-['Inter'] transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 h-screen overflow-hidden">
 
-    <!-- Top Navigation -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-slate-200 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a href="index.html" class="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <div class="flex items-center gap-3">
-                    <div class="bg-teal-600 w-10 h-10 flex items-center justify-center rounded-xl shadow-lg text-white">
-                        <i class="fas fa-hospital-user"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-sm font-bold uppercase tracking-tight">EHR Module <span class="text-teal-500">Phase 1</span></h1>
-                        <p class="text-[9px] text-slate-500 uppercase tracking-widest font-black">Backend Integration Test</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="hidden md:flex flex-col items-end">
-                    <span class="text-[10px] font-bold text-teal-600 uppercase">API Endpoint</span>
-                    <span class="text-[11px] font-mono opacity-60">http://localhost:8080/api/v1/ehr</span>
-                </div>
-                <button @click="darkMode = !darkMode" class="p-2.5 bg-slate-200 dark:bg-slate-800 rounded-xl hover:scale-110 transition-all">
-                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon text-teal-600'"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 h-[calc(100vh-6rem)] overflow-hidden">
+    <div class="flex h-full">
         
-        <!-- Sidebar Navigation -->
-        <aside class="lg:col-span-3 flex flex-col gap-4 overflow-y-auto custom-scroll pr-2">
-            <div class="glass-panel rounded-3xl p-6 border border-teal-500/10">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Danh mục thử nghiệm</h4>
-                <nav class="space-y-2">
-                    <button @click="activeTab = 'patients'" 
-                        :class="activeTab === 'patients' ? 'bg-teal-600 text-white shadow-teal-900/20' : 'hover:bg-slate-200 dark:hover:bg-slate-800'"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300">
-                        <i class="fas fa-users w-5"></i> Quản lý Bệnh nhân
-                    </button>
-                    <button @click="activeTab = 'records'" 
-                        :class="activeTab === 'records' ? 'bg-teal-600 text-white' : 'hover:bg-slate-200 dark:hover:bg-slate-800'"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300">
-                        <i class="fas fa-notes-medical w-5"></i> Bệnh án điện tử
-                    </button>
-                    <button @click="activeTab = 'vitals'" 
-                        :class="activeTab === 'vitals' ? 'bg-teal-600 text-white' : 'hover:bg-slate-200 dark:hover:bg-slate-800'"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300">
-                        <i class="fas fa-heartbeat w-5"></i> Dấu hiệu sinh tồn
-                    </button>
-                    <button @click="activeTab = 'iot'" 
-                        :class="activeTab === 'iot' ? 'bg-teal-600 text-white' : 'hover:bg-slate-200 dark:hover:bg-slate-800'"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300">
-                        <i class="fas fa-microchip w-5 text-indigo-500"></i> Mô phỏng IoT
-                    </button>
-                </nav>
+        <!-- SIDEBAR -->
+        <aside class="w-20 lg:w-24 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col items-center py-8 gap-8 z-50">
+            <div class="bg-teal-600 w-12 h-12 flex items-center justify-center rounded-2xl shadow-xl text-white transform hover:rotate-12 transition-transform cursor-pointer">
+                <i class="fas fa-hospital-user text-xl"></i>
             </div>
-
-            <div class="glass-panel rounded-3xl p-6 mt-4 border border-indigo-500/10 hidden lg:block">
-                <p class="text-[9px] font-black text-indigo-500 uppercase mb-2">Trạng thái kết nối</p>
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                    <span class="text-[10px] font-bold opacity-60">Backend Offline (Localhost)</span>
-                </div>
-                <div class="p-3 bg-indigo-500/10 rounded-xl">
-                    <p class="text-[10px] text-slate-500 italic">Vui lòng chạy Spring Boot HmisApplication.java tại cổng 8080 để đồng bộ dữ liệu thật.</p>
-                </div>
+            
+            <nav class="flex flex-col gap-6">
+                <button @click="activeTab = 'dashboard'; selectedPatient = null" :class="activeTab === 'dashboard' ? 'text-teal-600 bg-teal-50 dark:bg-teal-900/20' : 'text-slate-400'" class="w-12 h-12 flex items-center justify-center rounded-2xl transition-all relative group">
+                    <i class="fas fa-th-large text-lg"></i>
+                    <span class="absolute left-16 bg-slate-900 text-white text-[9px] font-bold px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">Tổng quan</span>
+                </button>
+                <button @click="activeTab = 'patients'; selectedPatient = null" :class="activeTab === 'patients' ? 'text-teal-600 bg-teal-50 dark:bg-teal-900/20' : 'text-slate-400'" class="w-12 h-12 flex items-center justify-center rounded-2xl transition-all relative group">
+                    <i class="fas fa-user-injured text-lg"></i>
+                    <span class="absolute left-16 bg-slate-900 text-white text-[9px] font-bold px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">Bệnh nhân</span>
+                </button>
+                <button @click="activeTab = 'records'" :class="activeTab === 'records' ? 'text-teal-600 bg-teal-50 dark:bg-teal-900/20' : 'text-slate-400'" class="w-12 h-12 flex items-center justify-center rounded-2xl transition-all relative group">
+                    <i class="fas fa-file-medical text-lg"></i>
+                    <span class="absolute left-16 bg-slate-900 text-white text-[9px] font-bold px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">Bệnh án</span>
+                </button>
+            </nav>
+            
+            <div class="mt-auto flex flex-col gap-6">
+                <button @click="darkMode = !darkMode" class="text-slate-400 hover:text-teal-600 transition-colors"><i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i></button>
+                <div class="w-10 h-10 rounded-full border-2 border-teal-500 p-0.5 overflow-hidden shadow-lg"><img src="https://ui-avatars.com/api/?name=Admin&background=0d9488&color=fff" class="rounded-full"></div>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <section class="lg:col-span-9 glass-panel rounded-[3rem] p-8 overflow-hidden shadow-2xl relative flex flex-col">
+        <!-- MAIN CONTAINER -->
+        <div class="flex-grow flex flex-col min-w-0">
             
-            <!-- Tab: Patients -->
-            <div x-show="activeTab === 'patients'" x-cloak class="flex flex-col h-full">
-                <div class="flex justify-between items-end mb-8">
-                    <div>
-                        <h2 class="text-3xl font-black tracking-tight">Danh sách Bệnh nhân</h2>
-                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Quản lý hồ sơ cơ bản (CRUD Test)</p>
+            <!-- HEADER -->
+            <header class="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between z-40">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-black uppercase tracking-tighter">SCP <span class="text-teal-600">HMIS</span></h1>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-800"></div>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400" x-text="activeTab === 'dashboard' ? 'Tổng quan hệ thống' : (activeTab === 'patients' ? 'Quản lý bệnh nhân' : 'Bệnh án điện tử')"></p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative"><i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i><input type="text" x-model="searchKeyword" @input.debounce.500ms="searchPatients()" class="bg-slate-100 dark:bg-slate-800 rounded-full pl-10 pr-6 py-2 text-xs font-medium w-64 focus:w-80 transition-all outline-none border border-transparent focus:border-teal-500" placeholder="Tìm tên, mã, SĐT..."></div>
+                    <button @click="logout()" class="text-slate-400 hover:text-red-500 transition-all"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </header>
+
+            <!-- TAB CONTENT -->
+            <main class="flex-grow overflow-hidden relative">
+                
+                <!-- ═══ DASHBOARD ═══ -->
+                <div x-show="activeTab === 'dashboard'" class="h-full overflow-y-auto custom-scroll p-8 animate-fade-in">
+                    <div class="max-w-6xl mx-auto space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="glass rounded-[2rem] p-6 bg-gradient-to-br from-white/80 to-teal-50/30 dark:from-slate-900/80 dark:to-teal-900/10 shadow-xl shadow-teal-500/5">
+                                <div class="w-12 h-12 bg-teal-500 text-white rounded-2xl flex items-center justify-center shadow-lg mb-4"><i class="fas fa-user-injured text-lg"></i></div>
+                                <p class="text-3xl font-black" x-text="patientCount">0</p><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Tổng bệnh nhân</p>
+                            </div>
+                            <div class="glass rounded-[2rem] p-6 bg-gradient-to-br from-white/80 to-indigo-50/30 dark:from-slate-900/80 dark:to-indigo-900/10 shadow-xl shadow-indigo-500/5">
+                                <div class="w-12 h-12 bg-indigo-500 text-white rounded-2xl flex items-center justify-center shadow-lg mb-4"><i class="fas fa-file-medical text-lg"></i></div>
+                                <p class="text-3xl font-black" x-text="medicalHistory.length">0</p><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Bệnh án hôm nay</p>
+                            </div>
+                            <div class="glass rounded-[2rem] p-6 bg-gradient-to-br from-white/80 to-amber-50/30 dark:from-slate-900/80 dark:to-amber-900/10 shadow-xl shadow-amber-500/5">
+                                <div class="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center shadow-lg mb-4"><i class="fas fa-pills text-lg"></i></div>
+                                <p class="text-3xl font-black">24</p><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Đơn thuốc cấp</p>
+                            </div>
+                            <div class="glass rounded-[2rem] p-6 bg-gradient-to-br from-white/80 to-rose-50/30 dark:from-slate-900/80 dark:to-rose-900/10 shadow-xl shadow-rose-500/5">
+                                <div class="w-12 h-12 bg-rose-500 text-white rounded-2xl flex items-center justify-center shadow-lg mb-4"><i class="fas fa-heartbeat text-lg"></i></div>
+                                <p class="text-3xl font-black">98%</p><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Chỉ số ổn định</p>
+                            </div>
+                        </div>
+                        <div class="glass rounded-[2rem] p-8">
+                            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2"><i class="fas fa-clock text-teal-600"></i> Tiếp nhận gần đây</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <template x-for="p in patients.slice(0, 6)" :key="p.id">
+                                    <div @click="activeTab = 'records'; selectPatient(p)" class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 hover:bg-teal-50 dark:hover:bg-teal-900/20 border border-transparent hover:border-teal-500/10 cursor-pointer transition-all flex items-center gap-4 group">
+                                        <div class="w-10 h-10 bg-teal-100 dark:bg-teal-900/30 text-teal-600 rounded-xl flex items-center justify-center font-black" x-text="p.name.charAt(0)"></div>
+                                        <div><p class="text-sm font-bold" x-text="p.name"></p><p class="text-[10px] text-slate-400" x-text="p.code"></p></div>
+                                        <i class="fas fa-chevron-right ml-auto text-[10px] text-slate-300 group-hover:text-teal-500 transition-colors"></i>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
                     </div>
-                    <button class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase shadow-lg shadow-teal-500/30 transition-all flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Thêm bệnh nhân mới
-                    </button>
                 </div>
 
-                <div class="flex-grow overflow-y-auto custom-scroll pr-2">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Patient Card Mock -->
-                        <template x-for="i in 6">
-                            <div class="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30 hover:border-teal-500/50 transition-all group cursor-pointer">
+                <!-- ═══ PATIENTS ═══ -->
+                <div x-show="activeTab === 'patients'" class="h-full overflow-y-auto custom-scroll p-8 animate-fade-in">
+                    <div class="max-w-6xl mx-auto space-y-6">
+                        <div class="glass rounded-[2rem] overflow-hidden border-slate-200 dark:border-slate-800 shadow-2xl">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50">
+                                    <tr class="text-[9px] font-black uppercase tracking-[0.1em] text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                                        <th class="p-5">Mã định danh</th><th class="p-5">Họ tên & Tuổi</th><th class="p-5">Giới tính</th><th class="p-5">Thông tin liên lạc</th><th class="p-5">Nhóm máu</th><th class="p-5">Cảnh báo</th><th class="p-5 text-right">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                    <template x-for="p in patients" :key="p.id">
+                                        <tr class="hover:bg-teal-500/5 transition-colors group">
+                                            <td class="p-5"><span class="badge bg-teal-50 dark:bg-teal-900/30 text-teal-600 border border-teal-500/10" x-text="p.code"></span></td>
+                                            <td class="p-5"><div><p class="font-bold text-slate-700 dark:text-slate-200" x-text="p.name"></p><p class="text-[10px] text-slate-400 mt-0.5" x-text="p.age + ' tuổi'"></p></div></td>
+                                            <td class="p-5"><span class="badge" :class="p.gender === 'Nam' ? 'bg-blue-100 text-blue-600' : 'bg-rose-100 text-rose-600'" x-text="p.gender"></span></td>
+                                            <td class="p-5 font-medium text-slate-600 dark:text-slate-400" x-text="p.phone"></td>
+                                            <td class="p-5 font-black text-rose-500" x-text="p.bloodType"></td>
+                                            <td class="p-5"><template x-if="p.allergies"><span class="badge bg-rose-500/10 text-rose-600 flex items-center gap-1 w-fit"><i class="fas fa-exclamation-triangle text-[8px]"></i> <span x-text="p.allergies"></span></span></template></td>
+                                            <td class="p-5 text-right"><button @click="activeTab = 'records'; selectPatient(p)" class="btn-primary py-2 px-4 inline-flex bg-teal-600/10 hover:bg-teal-600 text-teal-600 hover:text-white border border-teal-600/20 shadow-none">Vào khám</button></td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ EHR RECORDS ═══ -->
+                <div x-show="activeTab === 'records'" class="h-full flex overflow-hidden animate-fade-in">
+                    <!-- Workflow Column -->
+                    <div class="flex-grow flex flex-col bg-slate-50/50 dark:bg-[#0f172a]/30">
+                        <!-- Patient Mini Header (Integrated Progress) -->
+                        <div class="p-4 lg:p-6 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-6">
+                            <template x-if="selectedPatient">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 rounded-2xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 text-xl font-black">
-                                        BN
-                                    </div>
-                                    <div class="flex-grow">
-                                        <div class="flex justify-between items-start">
-                                            <h5 class="font-bold text-lg group-hover:text-teal-600 transition-colors">Nguyễn Văn Khách Hàng <span x-text="i"></span></h5>
-                                            <span class="text-[8px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-black opacity-60">BN2026-000<span x-text="i"></span></span>
-                                        </div>
-                                        <div class="flex gap-4 mt-2">
-                                            <span class="text-[10px] font-bold text-slate-500 uppercase"><i class="fas fa-calendar-alt mr-1"></i> 15/05/1990</span>
-                                            <span class="text-[10px] font-bold text-slate-500 uppercase"><i class="fas fa-venus-mars mr-1"></i> Nam</span>
-                                        </div>
+                                    <div class="w-12 h-12 bg-teal-600 text-white rounded-2xl flex items-center justify-center font-black text-lg shadow-lg" x-text="selectedPatient.name.charAt(0)"></div>
+                                    <div>
+                                        <h3 class="font-black text-lg" x-text="selectedPatient.name"></h3>
+                                        <p class="text-[10px] font-black text-teal-600 uppercase tracking-widest" x-text="selectedPatient.code + ' • ' + selectedPatient.age + ' tuổi'"></p>
                                     </div>
                                 </div>
-                                <div class="mt-4 flex gap-2">
-                                    <button class="flex-grow py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-[10px] font-black uppercase hover:bg-teal-600 hover:text-white transition-all underline-none">Xem bệnh án</button>
-                                    <button class="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                            </template>
+
+                            <!-- Clinical Progress Bar (Integrated) -->
+                            <div class="flex-grow max-w-xl mx-auto px-4 hidden xl:block">
+                                <div class="relative flex items-center justify-between">
+                                    <div class="absolute top-[18px] left-6 right-6 h-1 bg-slate-100 dark:bg-slate-800 rounded-full z-0"></div>
+                                    <div class="absolute top-[18px] left-6 h-1 bg-teal-500 rounded-full z-0 transition-all duration-700 ease-in-out" 
+                                         :style="ehrStep === 'exam' ? 'width: 0%' : (ehrStep === 'diagnosis' ? 'width: 46%' : 'width: 92%')"></div>
+                                    
+                                    <button @click="ehrStep = 'exam'" class="relative z-10 flex flex-col items-center gap-1.5 group">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black transition-all duration-500 shadow-md" 
+                                             :class="ehrStep === 'exam' ? 'bg-teal-600 text-white scale-110' : 'bg-white dark:bg-slate-800 text-slate-400 border border-slate-100 dark:border-slate-800'">
+                                            <i class="fas fa-stethoscope text-[10px]"></i>
+                                        </div>
+                                        <span class="text-[8px] font-black uppercase tracking-widest" :class="ehrStep === 'exam' ? 'text-teal-600' : 'text-slate-400'">Lâm sàng</span>
+                                    </button>
+
+                                    <button @click="ehrStep = 'diagnosis'" class="relative z-10 flex flex-col items-center gap-1.5 group">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black transition-all duration-500 shadow-md" 
+                                             :class="ehrStep === 'diagnosis' ? 'bg-teal-600 text-white scale-110' : (ehrStep === 'treatment' ? 'bg-teal-100 text-teal-600' : 'bg-white dark:bg-slate-800 text-slate-400 border border-slate-100 dark:border-slate-800')">
+                                            <i class="fas fa-microscope text-[10px]"></i>
+                                        </div>
+                                        <span class="text-[8px] font-black uppercase tracking-widest" :class="ehrStep === 'diagnosis' ? 'text-teal-600' : 'text-slate-400'">Chẩn đoán</span>
+                                    </button>
+
+                                    <button @click="ehrStep = 'treatment'" class="relative z-10 flex flex-col items-center gap-1.5 group">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black transition-all duration-500 shadow-md" 
+                                             :class="ehrStep === 'treatment' ? 'bg-teal-600 text-white scale-110' : 'bg-white dark:bg-slate-800 text-slate-400 border border-slate-100 dark:border-slate-800'">
+                                            <i class="fas fa-pills text-[10px]"></i>
+                                        </div>
+                                        <span class="text-[8px] font-black uppercase tracking-widest" :class="ehrStep === 'treatment' ? 'text-teal-600' : 'text-slate-400'">Điều trị</span>
+                                    </button>
                                 </div>
                             </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Tab: Medical Records -->
-            <div x-show="activeTab === 'records'" x-cloak class="flex flex-col h-full">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-black tracking-tight">Hồ sơ Bệnh án điện tử</h2>
-                    <p class="text-xs text-teal-600 font-bold uppercase tracking-widest mt-1">Tích hợp ICD-10 & Phác đồ điều trị</p>
-                </div>
+                            <div class="flex items-center gap-4">
+                                <div class="h-10 w-px bg-slate-100 dark:bg-slate-800 hidden md:block"></div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Khám trực tuyến</span>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="bg-indigo-500/5 rounded-[2rem] p-8 flex-grow flex flex-col items-center justify-center border-2 border-dashed border-indigo-500/20">
-                    <div class="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-search text-3xl text-indigo-500"></i>
-                    </div>
-                    <p class="text-sm font-bold text-slate-500 mb-8 max-w-sm text-center">Chọn một bệnh nhân từ danh sách hoặc nhập Mã bệnh nhân để kiểm tra lịch sử EHR từ backend.</p>
-                    <div class="flex w-full max-w-md gap-2">
-                        <input type="text" placeholder="Nhập mã bệnh nhân (VD: BN2026-0001)..." class="flex-grow bg-white dark:bg-slate-900 border-none rounded-2xl px-6 py-4 text-sm font-bold shadow-xl">
-                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 rounded-2xl text-xs font-black uppercase transition-all shadow-lg shadow-indigo-900/20">Truy vấn</button>
-                    </div>
-                </div>
-            </div>
+                        <!-- Form Area -->
+                        <div class="flex-grow overflow-y-auto custom-scroll p-6 lg:p-8 bg-slate-50/50 dark:bg-slate-900/50">
+                            <div class="max-w-4xl mx-auto">
+                                <template x-if="!selectedPatient">
+                                    <div class="h-full flex flex-col items-center justify-center text-center opacity-30 mt-20">
+                                        <i class="fas fa-stethoscope text-6xl mb-6"></i>
+                                        <h3 class="text-xl font-black uppercase tracking-widest">Chọn bệnh nhân để bắt đầu</h3>
+                                    </div>
+                                </template>
 
-            <!-- Tab: Vital Signs -->
-            <div x-show="activeTab === 'vitals'" x-cloak class="flex flex-col h-full">
-                <div class="mb-8 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-3xl font-black tracking-tight">Vital Signs Monitor</h2>
-                        <p class="text-xs text-red-500 font-bold uppercase tracking-widest mt-1">Theo dõi chỉ số sinh tồn động</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <div class="px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20 text-[10px] font-black text-red-500 uppercase flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span> Live IoT Signal
+                                <template x-if="selectedPatient">
+                                    <div class="space-y-8">
+                                        <!-- Step 1: Exam -->
+                                        <div x-show="ehrStep === 'exam'" class="space-y-8 animate-fade-in">
+                                            <div class="glass rounded-[2.5rem] p-10 space-y-8">
+                                                <div>
+                                                    <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Lý do vào viện</label>
+                                                    <input type="text" x-model="form.visitReason" class="input-premium" placeholder="Nhập lý do chính (VD: Đau ngực, sốt cao...)">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Triệu chứng & Ghi nhận lâm sàng</label>
+                                                    <textarea x-model="form.symptoms" class="input-premium h-48 resize-none" placeholder="Mô tả chi tiết các triệu chứng ghi nhận được từ bệnh nhân..."></textarea>
+                                                </div>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                    <div>
+                                                        <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Tiền sử bệnh lý</label>
+                                                        <input type="text" x-model="form.pastMedicalHistory" class="input-premium" placeholder="Các bệnh lý nền...">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Dị ứng ghi nhận</label>
+                                                        <input type="text" x-model="form.allergies" class="input-premium text-rose-600 font-bold" placeholder="Thuốc, thực phẩm...">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-end pt-4"><button @click="ehrStep = 'diagnosis'" class="btn-primary min-w-[240px]">Tiếp tục chẩn đoán <i class="fas fa-arrow-right ml-2"></i></button></div>
+                                        </div>
+
+                                        <!-- Step 2: Diagnosis -->
+                                        <div x-show="ehrStep === 'diagnosis'" class="space-y-8 animate-fade-in">
+                                            <div class="glass rounded-[2.5rem] p-10 space-y-8">
+                                                <div>
+                                                    <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Mã bệnh ICD-10 (Chẩn đoán chính)</label>
+                                                    <div class="relative">
+                                                        <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                                        <input type="text" x-model="form.icd10Code" class="input-premium pl-14" placeholder="Tìm kiếm mã hoặc tên bệnh (VD: J06.9)...">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Kết luận chẩn đoán lâm sàng</label>
+                                                    <textarea x-model="form.clinicalDiagnosis" class="input-premium h-32 resize-none font-bold text-teal-700 dark:text-teal-400" placeholder="Nhập chẩn đoán cuối cùng..."></textarea>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Ghi chú chuyên môn</label>
+                                                    <input type="text" x-model="form.notes" class="input-premium" placeholder="Lưu ý thêm về ca bệnh này...">
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between pt-4">
+                                                <button @click="ehrStep = 'exam'" class="px-8 py-4 text-[11px] font-black uppercase text-slate-400 hover:text-teal-600 transition-all tracking-widest"><i class="fas fa-arrow-left mr-2"></i> Quay lại bước 1</button>
+                                                <button @click="ehrStep = 'treatment'" class="btn-primary min-w-[240px]">Kê đơn & Điều trị <i class="fas fa-arrow-right ml-2"></i></button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Step 3: Treatment -->
+                                        <div x-show="ehrStep === 'treatment'" class="space-y-8 animate-fade-in">
+                                            <div class="glass rounded-[2.5rem] p-10 space-y-10">
+                                                <div>
+                                                    <label class="block text-[11px] font-black text-teal-600 uppercase mb-3 tracking-[0.2em] ml-1">Phác đồ điều trị & Lời dặn</label>
+                                                    <textarea x-model="form.treatmentPlan" class="input-premium h-32 resize-none font-medium italic" placeholder="Nhập phác đồ, chế độ dinh dưỡng, vận động..."></textarea>
+                                                </div>
+                                                <div class="space-y-6">
+                                                    <div class="flex justify-between items-center px-2">
+                                                        <h4 class="text-[11px] font-black uppercase text-slate-500 tracking-[0.2em] flex items-center gap-2"><i class="fas fa-pills text-teal-600"></i> Danh mục thuốc chỉ định</h4>
+                                                        <button @click="showRxModal = true" class="px-5 py-2.5 bg-indigo-600/10 text-indigo-600 rounded-xl font-black text-[10px] uppercase hover:bg-indigo-600 hover:text-white transition-all shadow-sm">+ Thêm thuốc mới</button>
+                                                    </div>
+                                                    <div class="rounded-[2rem] border-2 border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm">
+                                                        <table class="w-full text-left text-sm">
+                                                            <thead class="bg-slate-50/80 dark:bg-slate-800/80 font-black text-slate-400 uppercase text-[9px] tracking-widest">
+                                                                <tr><th class="p-5">Dược phẩm</th><th class="p-5 text-center">SL</th><th class="p-5">Liều dùng</th><th class="p-5 text-right">Xóa</th></tr>
+                                                            </thead>
+                                                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                                                <template x-for="(rx, idx) in rxList" :key="idx">
+                                                                    <tr class="hover:bg-teal-500/5 transition-colors">
+                                                                        <td class="p-5">
+                                                                            <p class="font-bold text-slate-700 dark:text-slate-200" x-text="rx.drugName"></p>
+                                                                            <p class="text-[10px] text-slate-400 mt-1 italic" x-text="rx.instructions"></p>
+                                                                        </td>
+                                                                        <td class="p-5 text-center font-black text-teal-600 text-lg" x-text="rx.quantity + ' ' + rx.unit"></td>
+                                                                        <td class="p-5">
+                                                                            <div class="flex justify-center gap-1.5">
+                                                                                <span class="w-7 h-7 flex items-center justify-center rounded-lg text-[10px] font-black border-2" :class="rx.morningDose > 0 ? 'bg-teal-500 border-teal-500 text-white' : 'border-slate-100 text-slate-300'">S</span>
+                                                                                <span class="w-7 h-7 flex items-center justify-center rounded-lg text-[10px] font-black border-2" :class="rx.noonDose > 0 ? 'bg-teal-500 border-teal-500 text-white' : 'border-slate-100 text-slate-300'">T</span>
+                                                                                <span class="w-7 h-7 flex items-center justify-center rounded-lg text-[10px] font-black border-2" :class="rx.eveningDose > 0 ? 'bg-teal-500 border-teal-500 text-white' : 'border-slate-100 text-slate-300'">T</span>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="p-5 text-right"><button @click="removePrescription(idx)" class="w-10 h-10 rounded-xl hover:bg-rose-50 text-rose-300 hover:text-rose-500 transition-all"><i class="fas fa-trash-alt"></i></button></td>
+                                                                    </tr>
+                                                                </template>
+                                                                <tr x-show="rxList.length === 0"><td colspan="4" class="p-12 text-center text-slate-400 italic">Chưa kê đơn thuốc. Vui lòng thêm thuốc để tiếp tục.</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between pt-4">
+                                                <button @click="ehrStep = 'diagnosis'" class="px-8 py-4 text-[11px] font-black uppercase text-slate-400 hover:text-teal-600 transition-all tracking-widest"><i class="fas fa-arrow-left mr-2"></i> Quay lại bước 2</button>
+                                                <button @click="submitMedicalRecord()" class="btn-primary px-16 bg-teal-600 hover:bg-teal-700 shadow-teal-600/30 text-sm" :disabled="loading">
+                                                    <i class="fas fa-save mr-2" x-show="!loading"></i>
+                                                    <i class="fas fa-spinner fa-spin mr-2" x-show="loading"></i>
+                                                    Lưu & Hoàn tất hồ sơ
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Right Panel: Vitals & History -->
+                    <aside class="w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col">
+                        <div class="p-6 border-b border-slate-100 dark:border-slate-800">
+                            <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Chỉ số sinh hiệu</h2>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="p-4 rounded-[1.5rem] bg-rose-500/5 border border-rose-500/10 text-center"><i class="fas fa-heartbeat text-rose-500 text-sm mb-2"></i><p class="text-lg font-black" x-text="latestVitals?.heartRate || '--'"></p><p class="text-[8px] font-black text-slate-400 uppercase">Nhịp tim</p></div>
+                                <div class="p-4 rounded-[1.5rem] bg-teal-500/5 border border-teal-500/10 text-center"><i class="fas fa-thermometer-half text-teal-600 text-sm mb-2"></i><p class="text-lg font-black" x-text="latestVitals?.temperature || '--'"></p><p class="text-[8px] font-black text-slate-400 uppercase">Nhiệt độ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex-grow overflow-y-auto custom-scroll p-6">
+                            <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Lịch sử khám bệnh</h2>
+                            <div class="space-y-6">
+                                <template x-for="h in medicalHistory" :key="h.id">
+                                    <div @click="viewRecordDetail(h)" class="relative pl-6 border-l-2 border-slate-100 dark:border-slate-800 pb-2 cursor-pointer group">
+                                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-2 border-teal-500 group-hover:bg-teal-500 transition-all"></div>
+                                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-transparent hover:border-teal-500/20 transition-all">
+                                            <p class="text-[9px] font-black text-teal-600 uppercase mb-1" x-text="h.date"></p>
+                                            <h4 class="text-[11px] font-black truncate" x-text="h.diagnosis"></h4>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div x-show="medicalHistory.length === 0" class="text-center py-10 opacity-30 italic text-xs">Chưa có lịch sử khám.</div>
+                            </div>
+                        </div>
+                        <div class="p-6"><button @click="showRecordPanel = true" :disabled="!selectedPatient" class="w-full btn-primary !bg-indigo-600 !shadow-indigo-500/20"><i class="fas fa-folder-open mr-1"></i> Hồ sơ gốc & XN</button></div>
+                    </aside>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="p-6 rounded-3xl bg-red-500 text-white shadow-xl shadow-red-900/20">
-                        <p class="text-[10px] font-black uppercase opacity-80 mb-2">Nhịp tim</p>
-                        <div class="flex items-end gap-2">
-                            <span class="text-4xl font-black">78</span>
-                            <span class="text-[10px] font-bold mb-1 uppercase">bpm</span>
-                        </div>
-                    </div>
-                    <div class="p-6 rounded-3xl bg-teal-600 text-white shadow-xl shadow-teal-900/20">
-                        <p class="text-[10px] font-black uppercase opacity-80 mb-2">SpO2</p>
-                        <div class="flex items-end gap-2">
-                            <span class="text-4xl font-black">99</span>
-                            <span class="text-[10px] font-bold mb-1 uppercase font-black">%</span>
-                        </div>
-                    </div>
-                    <div class="p-6 rounded-3xl bg-orange-500 text-white shadow-xl shadow-orange-900/20">
-                        <p class="text-[10px] font-black uppercase opacity-80 mb-2">Huyết áp</p>
-                        <div class="flex items-end gap-2">
-                            <span class="text-3xl font-black">120/80</span>
-                            <span class="text-[10px] font-bold mb-1 uppercase">mmHg</span>
-                        </div>
-                    </div>
-                    <div class="p-6 rounded-3xl bg-indigo-600 text-white shadow-xl shadow-indigo-900/20">
-                        <p class="text-[10px] font-black uppercase opacity-80 mb-2">Nhiệt độ</p>
-                        <div class="flex items-end gap-2">
-                            <span class="text-4xl font-black">36.7</span>
-                            <span class="text-[10px] font-bold mb-1 uppercase">°C</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex-grow glass-panel rounded-[2rem] border border-slate-200 dark:border-slate-800 overflow-hidden">
-                    <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                        <span class="text-[11px] font-black uppercase tracking-widest text-slate-500">Lịch sử đo lường (Backend Sink)</span>
-                        <button class="text-teal-600 font-bold text-[10px] uppercase">Xuất CSV</button>
-                    </div>
-                    <div class="p-6 flex flex-col items-center justify-center text-slate-400 italic text-sm h-full opacity-60">
-                        <i class="fas fa-database text-4xl mb-4"></i>
-                        Đang đợi dữ liệu từ VitalSignsController...
-                    </div>
-                </div>
-            </div>
-
-            <!-- Floating Decoration -->
-            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -top-10 -left-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        </section>
-    </main>
-
-    <footer class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            © 2026 SCP HMIS Ecosystem • Enterprise Grade EHR
+            </main>
         </div>
-        <div class="flex gap-6">
-            <a href="https://github.com/9dpi/hmis" target="_blank" class="text-[10px] font-black uppercase text-teal-600 hover:underline">
-                <i class="fab fa-github mr-1"></i> Source Code
-            </a>
-            <a href="plans/benh_an_dien_tu.md" target="_blank" class="text-[10px] font-black uppercase text-slate-500 hover:text-teal-600">
-                <i class="fas fa-file-alt mr-1"></i> Kế hoạch triển khai
-            </a>
-        </div>
-    </footer>
+    </div>
 
+    <!-- ═══ MODALS ═══ -->
+    
+    <!-- LOGIN -->
+    <div x-show="showLogin" x-cloak class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[2.5rem] shadow-2xl overflow-hidden border border-teal-500/20 animate-fade-in">
+            <div class="p-8 bg-teal-600 text-white text-center"><i class="fas fa-hospital-user text-4xl mb-3"></i><h3 class="font-black uppercase tracking-tight text-xl">SCP HMIS</h3><p class="text-[10px] opacity-80 uppercase tracking-widest">Hệ thống bệnh án điện tử</p></div>
+            <div class="p-10 space-y-6">
+                <div x-show="loginError" class="p-4 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 rounded-2xl text-[11px] text-rose-600 font-bold" x-text="loginError"></div>
+                <div><label class="block text-[10px] font-black text-teal-600 uppercase mb-2 ml-1">Username</label><input x-model="loginForm.username" type="text" class="input-premium" placeholder="admin"></div>
+                <div><label class="block text-[10px] font-black text-teal-600 uppercase mb-2 ml-1">Password</label><input x-model="loginForm.password" type="password" class="input-premium" placeholder="••••••••" @keydown.enter="doLogin()"></div>
+                <button @click="doLogin()" class="btn-primary w-full py-4 text-sm"><i class="fas fa-sign-in-alt mr-2"></i> Đăng nhập ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RX MODAL -->
+    <div x-show="showRxModal" x-cloak class="fixed inset-0 z-[150] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden border border-teal-500/20 animate-fade-in">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center"><h3 class="font-black uppercase tracking-widest text-xs">Kê đơn thuốc</h3><button @click="showRxModal = false" class="text-slate-400 hover:text-red-500"><i class="fas fa-times"></i></button></div>
+            <div class="p-8 space-y-5">
+                <div><label class="block text-[10px] font-black text-teal-600 uppercase mb-2 ml-1">Tên thuốc & Hàm lượng</label><input x-model="rxForm.drugName" type="text" class="input-premium" placeholder="VD: Paracetamol 500mg..."></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-[10px] font-black text-teal-600 uppercase mb-2 ml-1">Số lượng</label><input x-model="rxForm.quantity" type="number" class="input-premium"></div>
+                    <div><label class="block text-[10px] font-black text-teal-600 uppercase mb-2 ml-1">Đơn vị</label><select x-model="rxForm.unit" class="input-premium"><option>viên</option><option>gói</option><option>ống</option><option>lọ</option></select></div>
+                </div>
+                <div><label class="block text-[10px] font-black text-teal-600 uppercase mb-2 ml-1">Cách dùng</label><textarea x-model="rxForm.instructions" class="input-premium h-20 resize-none" placeholder="Sáng 1, trưa 0, tối 1, sau ăn..."></textarea></div>
+                <button @click="addPrescription()" class="btn-primary w-full py-4"><i class="fas fa-plus mr-2"></i> Thêm vào đơn thuốc</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE OVER PANEL -->
+    <div x-show="showRecordPanel" x-cloak class="fixed inset-0 z-[160] overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" @click="showRecordPanel = false"></div>
+        <div class="absolute inset-y-0 right-0 max-w-2xl w-full flex">
+            <div class="relative w-full glass shadow-2xl flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 p-8 space-y-8 h-full overflow-y-auto custom-scroll">
+                <div class="flex justify-between items-center"><h2 class="text-xl font-black uppercase tracking-tight">Chi tiết hồ sơ gốc</h2><button @click="showRecordPanel = false" class="w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center justify-center"><i class="fas fa-times"></i></button></div>
+                <div x-show="viewingRecord" class="space-y-8 animate-fade-in">
+                    <div class="p-6 rounded-[2rem] bg-teal-500/5 border border-teal-500/10 flex items-center gap-6"><div class="w-16 h-16 bg-teal-600 text-white rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg" x-text="selectedPatient?.name.charAt(0)"></div><div><h3 class="text-xl font-black" x-text="selectedPatient?.name"></h3><p class="text-[10px] font-black text-teal-600 uppercase tracking-widest" x-text="selectedPatient?.code"></p></div></div>
+                    <div class="grid grid-cols-1 gap-8">
+                        <div class="space-y-4"><h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Kết quả khám lâm sàng</h4><div class="glass p-6 rounded-2xl space-y-4 text-sm font-medium"><p><span class="text-slate-400 uppercase text-[9px] font-black block mb-1">Ngày khám:</span><span x-text="viewingRecord?.date"></span></p><p><span class="text-slate-400 uppercase text-[9px] font-black block mb-1">Chẩn đoán:</span><span class="text-teal-600 font-black" x-text="viewingRecord?.diagnosis"></span></p><p><span class="text-slate-400 uppercase text-[9px] font-black block mb-1">Ghi nhận:</span><span x-text="viewingRecord?.raw?.symptoms || '---'"></span></p></div></div>
+                        <div class="space-y-4"><h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Đơn thuốc & Phác đồ</h4><div class="glass p-6 rounded-2xl space-y-4 text-sm font-medium"><p><span class="text-slate-400 uppercase text-[9px] font-black block mb-1">Lời dặn:</span><span class="italic" x-text="viewingRecord?.raw?.treatmentPlan || '---'"></span></p></div></div>
+                    </div>
+                    <button class="btn-primary w-full py-4"><i class="fas fa-print mr-2"></i> In báo cáo bệnh án</button>
+                </div>
+                <div x-show="!viewingRecord" class="h-64 flex flex-col items-center justify-center text-center opacity-30"><i class="fas fa-history text-5xl mb-6"></i><p class="text-xs font-black uppercase">Chọn một lần khám trong lịch sử để xem chi tiết</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div x-show="showToast" x-cloak class="fixed bottom-10 right-10 z-[300] animate-fade-in">
+        <div class="bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border-l-4" :class="toastType === 'success' ? 'border-teal-500' : 'border-rose-500'">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center" :class="toastType === 'success' ? 'bg-teal-500' : 'bg-rose-500'"><i class="fas" :class="toastType === 'success' ? 'fa-check' : 'fa-exclamation'"></i></div>
+            <div><p class="text-xs font-black uppercase tracking-wider" x-text="toastType === 'success' ? 'Thành công' : 'Lỗi'"></p><p class="text-[10px] text-slate-400" x-text="toastMsg"></p></div>
+        </div>
+    </div>
+
+    <script>
+        function ehrApp() {
+            return {
+                darkMode: localStorage.getItem('darkMode') === 'true',
+                activeTab: 'dashboard',
+                ehrStep: 'exam',
+                selectedPatient: null,
+                showToast: false,
+                toastMsg: '',
+                toastType: 'success',
+                loading: false,
+                searchKeyword: '',
+                showRecordPanel: false,
+                viewingRecord: null,
+                
+                token: localStorage.getItem('hmis_token') || '',
+                currentUser: JSON.parse(localStorage.getItem('hmis_user') || 'null'),
+                showLogin: false,
+                loginForm: { username: '', password: '' },
+                loginError: '',
+                API: 'http://localhost:8080/api/v1',
+                patients: [],
+                patientCount: 0,
+                medicalHistory: [],
+                latestVitals: null,
+                rxList: [],
+                rxForm: { drugName: '', dosage: '', unit: 'viên', quantity: 10, instructions: '' },
+                showRxModal: false,
+
+                get isLoggedIn() { return !!this.token; },
+
+                init() {
+                    this.$watch('darkMode', val => localStorage.setItem('darkMode', val));
+                    if (this.isLoggedIn) { this.loadPatients(); } else { this.showLogin = true; }
+                },
+
+                async doLogin() {
+                    this.loginError = '';
+                    try {
+                        const res = await this.api('POST', '/auth/login', this.loginForm, false);
+                        this.token = res.data.token;
+                        this.currentUser = { fullName: res.data.fullName, role: res.data.role };
+                        localStorage.setItem('hmis_token', this.token);
+                        localStorage.setItem('hmis_user', JSON.stringify(this.currentUser));
+                        this.showLogin = false; this.loadPatients();
+                        this.toast('Chào mừng bác sĩ!');
+                    } catch (e) { this.loginError = e.message || 'Lỗi đăng nhập'; }
+                },
+
+                logout() {
+                    this.token = ''; this.currentUser = null;
+                    localStorage.removeItem('hmis_token'); localStorage.removeItem('hmis_user');
+                    this.patients = []; this.selectedPatient = null; this.showLogin = true;
+                },
+
+                async loadPatients() {
+                    this.loading = true;
+                    try {
+                        const res = await this.api('GET', '/ehr/patients?page=0&size=50');
+                        this.patients = (res.data.content || []).map(p => this.mapPatient(p));
+                        this.patientCount = res.data.totalElements || this.patients.length;
+                    } catch (e) { this.patients = []; }
+                    this.loading = false;
+                },
+
+                async searchPatients() {
+                    if (!this.searchKeyword.trim()) return this.loadPatients();
+                    this.loading = true;
+                    try {
+                        const res = await this.api('GET', `/ehr/patients/search?keyword=${encodeURIComponent(this.searchKeyword)}`);
+                        this.patients = (res.data || []).map(p => this.mapPatient(p));
+                        this.patientCount = this.patients.length;
+                    } catch (e) {}
+                    this.loading = false;
+                },
+
+                mapPatient(p) {
+                    const age = p.dob ? (new Date().getFullYear() - new Date(p.dob).getFullYear()) : '---';
+                    return { id: p.id, name: p.fullName, code: p.code, gender: p.gender === 'MALE' ? 'Nam' : 'Nữ', age, phone: p.phone, bloodType: p.bloodType, allergies: p.allergies };
+                },
+
+                async selectPatient(p) {
+                    this.selectedPatient = p;
+                    this.ehrStep = 'exam';
+                    this.resetForm();
+                    await Promise.all([this.loadMedicalHistory(p.id), this.loadLatestVitals(p.id)]);
+                },
+
+                async loadMedicalHistory(patientId) {
+                    try {
+                        const res = await this.api('GET', `/ehr/medical-records/patient/${patientId}`);
+                        this.medicalHistory = (res.data || []).map(r => ({
+                            id: r.id,
+                            date: r.visitDate ? new Date(r.visitDate).toLocaleDateString('vi-VN') : '',
+                            diagnosis: r.clinicalDiagnosis || r.icd10Code || 'Không ghi nhận',
+                            doctor: r.department || 'Khoa Nội',
+                            raw: r
+                        }));
+                    } catch (e) { this.medicalHistory = []; }
+                },
+
+                async loadLatestVitals(patientId) {
+                    try {
+                        const res = await this.api('GET', `/ehr/vital-signs/patient/${patientId}`);
+                        this.latestVitals = res.data?.length ? res.data[0] : null;
+                    } catch (e) { this.latestVitals = null; }
+                },
+
+                viewRecordDetail(h) { this.viewingRecord = h; this.showRecordPanel = true; },
+
+                addPrescription() {
+                    if (!this.rxForm.drugName) return;
+                    this.rxList.push({ ...this.rxForm, quantity: Number(this.rxForm.quantity) });
+                    this.rxForm = { drugName: '', dosage: '', unit: 'viên', quantity: 10, instructions: '' };
+                    this.showRxModal = false;
+                },
+
+                removePrescription(idx) { this.rxList.splice(idx, 1); },
+
+                async submitMedicalRecord() {
+                    this.loading = true;
+                    try {
+                        const body = { 
+                            patientId: this.selectedPatient.id,
+                            ...this.form,
+                            prescriptions: this.rxList
+                        };
+                        await this.api('POST', '/ehr/medical-records/save', body);
+                        this.toast('Đã lưu bệnh án thành công!');
+                        this.activeTab = 'dashboard';
+                        this.loadPatients();
+                    } catch (e) { this.toast(e.message, 'error'); }
+                    this.loading = false;
+                },
+
+                form: { visitReason: '', symptoms: '', clinicalDiagnosis: '', icd10Code: '', treatmentPlan: '', notes: '' },
+                resetForm() { this.form = { visitReason: '', symptoms: '', clinicalDiagnosis: '', icd10Code: '', treatmentPlan: '', notes: '' }; this.rxList = []; },
+                
+                toast(msg, type = 'success') { this.toastMsg = msg; this.toastType = type; this.showToast = true; setTimeout(() => this.showToast = false, 3000); },
+
+                async api(method, path, body = null, auth = true) {
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (auth && this.token) headers['Authorization'] = `Bearer ${this.token}`;
+                    const opts = { method, headers };
+                    if (body) opts.body = JSON.stringify(body);
+                    const res = await fetch(this.API + path, opts);
+                    if (res.status === 401) { this.logout(); throw new Error('Hết phiên đăng nhập'); }
+                    const json = await res.json();
+                    if (!res.ok) throw new Error(json.message || 'Lỗi API');
+                    return json;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
