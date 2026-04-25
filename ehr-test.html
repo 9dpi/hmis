@@ -271,7 +271,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="flex justify-end pt-4"><button @click="ehrStep = 'diagnosis'" class="btn-primary min-w-[240px]">Tiếp tục chẩn đoán <i class="fas fa-arrow-right ml-2"></i></button></div>
+                                            <div class="flex justify-end pt-4"><button @click="ehrStep = 'diagnosis'" class="btn-primary min-w-[240px] !rounded-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 shadow-xl shadow-teal-500/30 border border-teal-400/20">Tiếp tục chẩn đoán <i class="fas fa-arrow-right ml-2"></i></button></div>
                                         </div>
 
                                         <!-- Step 2: Diagnosis -->
@@ -342,7 +342,7 @@
                                             </div>
                                             <div class="flex justify-between pt-4">
                                                 <button @click="ehrStep = 'diagnosis'" class="px-8 py-4 text-[11px] font-black uppercase text-slate-400 hover:text-teal-600 transition-all tracking-widest"><i class="fas fa-arrow-left mr-2"></i> Quay lại bước 2</button>
-                                                <button @click="submitMedicalRecord()" class="btn-primary px-16 bg-teal-600 hover:bg-teal-700 shadow-teal-600/30 text-sm" :disabled="loading">
+                                                <button @click="submitMedicalRecord()" class="btn-primary px-16 !rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-xl shadow-emerald-500/30 border border-emerald-400/20 text-sm" :disabled="loading">
                                                     <i class="fas fa-save mr-2" x-show="!loading"></i>
                                                     <i class="fas fa-spinner fa-spin mr-2" x-show="loading"></i>
                                                     Lưu & Hoàn tất hồ sơ
@@ -379,7 +379,7 @@
                                 <div x-show="medicalHistory.length === 0" class="text-center py-10 opacity-30 italic text-xs">Chưa có lịch sử khám.</div>
                             </div>
                         </div>
-                        <div class="p-6"><button @click="showRecordPanel = true" :disabled="!selectedPatient" class="w-full btn-primary !bg-indigo-600 !shadow-indigo-500/20"><i class="fas fa-folder-open mr-1"></i> Hồ sơ gốc & XN</button></div>
+                        <div class="p-6"><button @click="showRecordPanel = true" :disabled="!selectedPatient" class="w-full btn-primary !rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 shadow-xl shadow-indigo-500/30 border border-indigo-400/20"><i class="fas fa-folder-open mr-2"></i> Hồ sơ gốc & Xét nghiệm</button></div>
                     </aside>
                 </div>
             </main>
@@ -502,10 +502,17 @@
                 async loadPatients() {
                     this.loading = true;
                     try {
+                        console.log('[HMIS] Loading patients...');
                         const res = await this.api('GET', '/ehr/patients?page=0&size=50');
+                        console.log('[HMIS] Patients response:', res);
                         this.patients = (res.data.content || []).map(p => this.mapPatient(p));
                         this.patientCount = res.data.totalElements || this.patients.length;
-                    } catch (e) { this.patients = []; }
+                        console.log('[HMIS] Loaded', this.patients.length, 'patients');
+                    } catch (e) {
+                        console.error('[HMIS] loadPatients FAILED:', e);
+                        this.patients = [];
+                        this.toast('Không tải được danh sách bệnh nhân: ' + e.message, 'error');
+                    }
                     this.loading = false;
                 },
 
@@ -591,11 +598,16 @@
                     if (auth && this.token) headers['Authorization'] = `Bearer ${this.token}`;
                     const opts = { method, headers };
                     if (body) opts.body = JSON.stringify(body);
-                    const res = await fetch(this.API + path, opts);
-                    if (res.status === 401) { this.logout(); throw new Error('Hết phiên đăng nhập'); }
-                    const json = await res.json();
-                    if (!res.ok) throw new Error(json.message || 'Lỗi API');
-                    return json;
+                    try {
+                        const res = await fetch(this.API + path, opts);
+                        if (res.status === 401) { this.logout(); throw new Error('Hết phiên đăng nhập'); }
+                        const json = await res.json();
+                        if (!res.ok) throw new Error(json.message || 'Lỗi API');
+                        return json;
+                    } catch (e) {
+                        console.error(`[HMIS] API ${method} ${path} failed:`, e);
+                        throw e;
+                    }
                 }
             }
         }
