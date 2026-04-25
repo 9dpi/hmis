@@ -568,14 +568,16 @@
                     try {
                         const body = { 
                             patientId: this.selectedPatient.id,
+                            visitDate: new Date().toISOString(),
                             ...this.form,
                             prescriptions: this.rxList
                         };
-                        await this.api('POST', '/ehr/medical-records/save', body);
+                        await this.api('POST', '/ehr/medical-records', body);
                         this.toast('Đã lưu bệnh án thành công!');
+                        this.selectedPatient = null;
                         this.activeTab = 'dashboard';
                         this.loadPatients();
-                    } catch (e) { this.toast(e.message, 'error'); }
+                    } catch (e) { this.toast(e.message || 'Lỗi hệ thống, vui lòng thử lại sau', 'error'); }
                     this.loading = false;
                 },
 
